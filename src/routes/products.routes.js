@@ -5,7 +5,7 @@ const authentication = require("../middleware/authentication")
 const router = Router()
 
 router.get('/', getProducts)
-router.post('/', authentication, isUserProduct, saveProduct)
+router.post('/', authentication, saveProduct)
 router.get('/:id', getProduct)
 router.put('/:id', authentication, isUserProduct, updateProduct)
 router.delete('/:id', authentication, isUserProduct, deleteProduct)

@@ -1,9 +1,9 @@
 const { user } = require("../models")
 
-// Get all users
+// Get all users (superadmin)
 const getUsers = async (req, res) => {
     try {
-    const getUsers = await user.findAll()
+    const getUsers = await user.findAll({ offset: 1, limit: 7 })
     res.status(200).json(getUsers)
     }
     catch (error) {
@@ -34,12 +34,11 @@ const updateUser = async (req, res) => {
         const id = req.params.id
         const getuser = await user.findOne({ where: { id } })
         if (getuser) {
-            const { user_name, user_role } = req.body
+            const { user_name } = req.body
             await user.update({
                 user_name,
-                user_role
             }, { where: { id } })
-            res.status(200).json({ id, user_name, user_role })
+            res.status(200).json({ id, user_name })
         }
         else {
             res.status(404).send('User does not exists')

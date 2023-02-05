@@ -4,7 +4,19 @@ const { product } = require("../models")
 // Get own transactions
 const getTransactions = async (req, res) => {
     try {
-        const getTransactions = await transaction.findAll()
+        const trans_buy_user_id = req.user.id
+        const getTransactions = await transaction.findAll({where:{trans_buy_user_id}, offset: 1, limit: 7 })
+        res.status(200).json(getTransactions)
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
+// Get all transactions (superadmin)
+const getAllTransactions = async (req, res) => {
+    try {
+        const getTransactions = await transaction.findAll({ offset: 1, limit: 10 })
         res.status(200).json(getTransactions)
     }
     catch (error) {
@@ -42,12 +54,12 @@ const getTransaction = async (req, res) => {
     try {
         const id = req.params.id
         const getTransaction = await transaction.findOne({ where: { id } })
-        if (getTransaction) {
+        // if (getTransaction) {
             res.status(200).json(getTransaction)
-        }
-        else {
-            res.status(404).send('Transaction does not exists')
-        }
+        // }
+        // else {
+        //     res.status(404).send('Transaction does not exists')
+        // }
     }
     catch (error) {
         res.status(500).json({ error })
@@ -58,36 +70,36 @@ const getTransaction = async (req, res) => {
 const cancelTransaction = async (req, res) => {
     try {
         const id = req.params.id
-        const getTransaction = await transaction.findOne({ where: { id } })
-        if (getTransaction) {
-            const { trans_cancel } = req.body
+        // const getTransaction = await transaction.findOne({ where: { id } })
+        // if (getTransaction) {
             await transaction.update({
-                trans_cancel,
+                trans_cancel: true,
             }, {
                 where: { id }
             })
             res.status(200).json(`Transaction ${id} cancelled`)
         }
-        else {
-            res.status(404).send('Transaction does not exists')
-        }
-    }
+        // else {
+        //     res.status(404).send('Transaction does not exists')
+        // }
+    // }
     catch (error) {
         res.status(500).json({ error })
     }
 }
 
+// Delete a transaction (superadmin)
 const deleteTransaction = async (req, res) => {
     try {
-        const trans_id = req.params.id
-        const transaction = await Users.findOne({ where: { trans_id } })
-        if (transaction) {
-            await Users.destroy({ where: { trans_id } })
-            res.status(200).json(`Transaction ${trans_id} deleted`)
-        }
-        else {
-            res.status(404).send('Transaction does not exists')
-        }
+        const id = req.params.id
+        // const transaction = await Users.findOne({ where: { id } })
+        // if (transaction) {
+            await transaction.destroy({ where: { id } })
+            res.status(200).json(`Transaction ${id} deleted`)
+        // }
+        // else {
+        //     res.status(404).send('Transaction does not exists')
+        // }
     }
     catch (error) {
         res.status(500).json({ error })
@@ -99,6 +111,7 @@ module.exports = {
     saveTransaction,
     getTransactions,
     cancelTransaction,
-    deleteTransaction
+    deleteTransaction,
+    getAllTransactions
 }
 

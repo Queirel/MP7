@@ -1,10 +1,9 @@
-const {product} = require("../models");
+const { product } = require("../models");
 
 //Get all products
 const getProducts = async (req, res) => {
     try {
-        // { offset: 5, limit: 5 }
-        const getProds = await product.findAll()
+        const getProds = await product.findAll({ offset: 1, limit: 7 })
         res.status(200).json(getProds)
     }
     catch (error) {
@@ -14,18 +13,24 @@ const getProducts = async (req, res) => {
 
 // Save a product
 const saveProduct = async (req, res) => {
-    const { prod_name, prod_user_id, prod_price, prod_stock, prod_category } = req.body
-    const saveProduct = await product.create({
-        prod_name,
-        prod_user_id,
-        prod_price,
-        prod_stock,
-        prod_category
-    })
-    res.status(200).json(saveProduct)
+    try {
+        const user_id = req.user.id
+        const { prod_name, prod_price, prod_stock, prod_category } = req.body
+        const saveProduct = await product.create({
+            prod_name,
+            prod_user_id: user_id,
+            prod_price,
+            prod_stock,
+            prod_category
+        })
+        res.status(200).json(saveProduct)
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
 }
 
-// Get product by user Id
+// Get product
 const getProduct = async (req, res) => {
     try {
         const id = req.params.id
@@ -91,9 +96,9 @@ const deleteProduct = async (req, res) => {
 const getProductByUserId = async (req, res) => {
     try {
         const prod_user_id = req.params.id
-        const product = await product.findAll({ where: { prod_user_id } })
-        if (product) {
-            res.status(200).json(product)
+        const getProducts = await product.findAll({ where: { prod_user_id } })
+        if (getProducts) {
+            res.status(200).json(getProducts)
         }
         else {
             res.status(404).send('There is no products from the user')
@@ -108,7 +113,6 @@ const getProductByUserId = async (req, res) => {
 const getProdByCategory = async (req, res) => {
     try {
         const prod_category = req.params.category
-        console.log(prod_category)
         const getProduct = await product.findAll({ where: { prod_category } })
         if (getProduct) {
             res.status(200).json(getProduct)

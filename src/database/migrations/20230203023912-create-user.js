@@ -22,7 +22,7 @@ module.exports = {
       }
     },
     user_role: {
-      type: Sequelize.ENUM('superadmin', 'user', 'guest'),
+      type: Sequelize.ENUM('admin', 'user'),
       allowNull: false
     },
     user_password: {
