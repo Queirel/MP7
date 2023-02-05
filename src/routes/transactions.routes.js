@@ -9,6 +9,6 @@ router.get('/all', authentication, isAdmin, getAllTransactions)
 router.post('/', authentication, saveTransaction)
 router.get('/:id', authentication, isUserTransaction, getTransaction)
 router.put('/:id', authentication, isUserTransaction, cancelTransaction)
-router.delete('/:id', authentication, isUserTransaction, deleteTransaction)
+router.delete('/:id', authentication, isAdmin, deleteTransaction)
 
 module.exports = router

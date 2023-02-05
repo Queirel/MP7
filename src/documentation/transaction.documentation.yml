@@ -1,0 +1,66 @@
+openapi: 3.0.0
+tags:
+  name: Transactions
+  description: To interact with the transactions
+paths:
+
+  
+  paths:
+  /transactions:
+    get:
+      summary: Show transaction
+      tags: [Transactions]
+      responses:
+        description: Show all transaction
+    post:
+      summary: Save a transaction
+      tags: [Transactions]
+      requestBody:
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                prod_name:
+                  type: string
+                prod_price:
+                  type: number
+                prod_stock:
+                  type: number
+                prod_category:
+                  type: number
+  /transactions?id=:
+    get:
+      summary: Show a transaction by id
+      tags: [Transactions]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      responses:
+        description: Muestra un producto
+    delete:
+      summary: Delete a transaction by id
+      tags: [Transactions]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteCategorya'
+      responses:
+        200:
+          description: product deleted
+    put:
+      summary: Update a transaction by id
+      tags: [Transactions]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      responses:
+        description: Muestra un producto
+

@@ -1,0 +1,50 @@
+openapi: 3.0.0
+tags:
+  name: Users
+  description: To interact with the users
+paths:
+
+  
+  paths:
+  /products:
+    get:
+      summary: Show users
+      tags: [Users]
+      responses:
+        description: Show all users
+    
+  /product?id=:
+    get:
+      summary: Show a user by id
+      tags: [Users]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      responses:
+        description: Muestra un producto
+    delete:
+      summary: Delete a user by id
+      tags: [Users]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteCategorya'
+      responses:
+        200:
+          description: product deleted
+    put:
+      summary: Update a user by id
+      tags: [Users]
+      parameters:
+        - in: header
+          name: token
+          type: string
+      responses:
+        description: Muestra un producto
+
