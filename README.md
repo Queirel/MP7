@@ -44,10 +44,10 @@ Auth:
 
 ## Authors
 
-- [@federicoqueirel](https://github.com/Queirel)
+***[@federicoqueirel](https://github.com/Queirel)***
 
 
 ## Support
 
-For support, email federicoqueirel@gmail.com
+***For support, email federicoqueirel@gmail.com***
 
