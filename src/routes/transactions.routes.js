@@ -1,14 +1,12 @@
 const { Router } = require("express")
-const { cancelTransaction, getTransaction, getAllTransactions, getTransactions, saveTransaction, deleteTransaction } = require("../controllers/transactions.controller")
-const { isUserTransaction, isAdmin } = require("../middleware/authorization")
+const { cancelTransaction, getTransaction, getOwnTransactions, saveTransaction } = require("../controllers/transactions.controller")
+const { isUserTransaction } = require("../middleware/authorization")
 const authentication = require("../middleware/authentication")
 const router = Router()
 
-router.get('/', authentication, getTransactions)
-router.get('/all', authentication, isAdmin, getAllTransactions)
-router.post('/', authentication, saveTransaction)
+router.get('/', authentication, getOwnTransactions)
 router.get('/:id', authentication, isUserTransaction, getTransaction)
+router.post('/', authentication, saveTransaction)
 router.put('/:id', authentication, isUserTransaction, cancelTransaction)
-router.delete('/:id', authentication, isAdmin, deleteTransaction)
 
 module.exports = router

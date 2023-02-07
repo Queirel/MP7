@@ -2,11 +2,11 @@ openapi: 3.0.0
 tags:
   name: Products
   description: To interact with the products
-paths:
+paths: 
 
-  
+
   paths:
-  /transactions:
+  /products:
     get:
       summary: Show products
       tags: [Products]
@@ -29,9 +29,9 @@ paths:
                   type: number
                 prod_category:
                   type: number
-  /transactions?id=:
+  /products?id=:
     get:
-      summary: Show a products by id
+      summary: Show a product by id
       tags: [Products]
       parameters:
         - in: header
@@ -40,7 +40,7 @@ paths:
       responses:
         description: Muestra un producto
     delete:
-      summary: Delete a products by id
+      summary: Delete a product by id
       tags: [Products]
       parameters:
         - in: header
@@ -55,7 +55,7 @@ paths:
         200:
           description: product deleted
     put:
-      summary: Update a products by id
+      summary: Update a product by id
       tags: [Products]
       parameters:
         - in: header

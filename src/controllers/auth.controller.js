@@ -34,10 +34,9 @@ const singIn = async (req, res) => {
 // Register ---> Create User
 const singUp = async (req, res) => {
     try {
-        const { user_name, user_password, user_role } = req.body
+        const { user_name, user_password } = req.body
         const passHash = await passwordHash(user_password)
         const newUser = await user.create({
-            user_role,
             user_name,
             user_password: passHash,
         })

@@ -2,21 +2,10 @@ const { transaction } = require("../models")
 const { product } = require("../models")
 
 // Get own transactions
-const getTransactions = async (req, res) => {
+const getOwnTransactions = async (req, res) => {
     try {
         const trans_buy_user_id = req.user.id
         const getTransactions = await transaction.findAll({where:{trans_buy_user_id}, offset: 1, limit: 7 })
-        res.status(200).json(getTransactions)
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
-}
-
-// Get all transactions (superadmin)
-const getAllTransactions = async (req, res) => {
-    try {
-        const getTransactions = await transaction.findAll({ offset: 1, limit: 10 })
         res.status(200).json(getTransactions)
     }
     catch (error) {
@@ -88,30 +77,11 @@ const cancelTransaction = async (req, res) => {
     }
 }
 
-// Delete a transaction (superadmin)
-const deleteTransaction = async (req, res) => {
-    try {
-        const id = req.params.id
-        // const transaction = await Users.findOne({ where: { id } })
-        // if (transaction) {
-            await transaction.destroy({ where: { id } })
-            res.status(200).json(`Transaction ${id} deleted`)
-        // }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
-}
 
 module.exports = {
     getTransaction,
     saveTransaction,
-    getTransactions,
-    cancelTransaction,
-    deleteTransaction,
-    getAllTransactions
+    getOwnTransactions,
+    cancelTransaction
 }
 

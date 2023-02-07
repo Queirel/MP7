@@ -33,7 +33,13 @@ Auth:
 
 ## Tech Stack
 
-**Server:** Node, Express, Sequelize, Postgres, bcryptjs, jsonebtoken
+**Server:** 
+- Node
+- Express
+- Sequelize
+- Postgres
+- bcryptjs
+- jsonebtoken
 
 
 ## Authors
