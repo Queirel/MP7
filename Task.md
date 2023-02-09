@@ -10,7 +10,7 @@ Functional
 `- Epic Stock`
 `- EPIC Filters`
 
-Frameworks
+Frameworks 
 - REST Client: Postman
 - REST: Express
 - A&A: JWT
