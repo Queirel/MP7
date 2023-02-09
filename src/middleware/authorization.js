@@ -3,9 +3,9 @@ const { transaction } = require("../models");
 const jwt = require("jsonwebtoken")
 require('dotenv').config()
 
-// Is an admin
+// Is admin
 const isAdmin = (req, res, next) => {
-    // try {
+    try {
         const user_role = req.user.user_role
         if (user_role == 'admin') {
             next()
@@ -13,10 +13,10 @@ const isAdmin = (req, res, next) => {
         else {
             res.status(401).json({ forbidden: 'you does not have access' })
         }
-    // }
-    // catch (error) {
-    //     res.status(500).json({ error })
-    // }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
 }
 
 
@@ -38,7 +38,7 @@ const isAdmin = (req, res, next) => {
 // }
 
 // Its your product
-const isUserProduct = async (req, res, next) => {
+const isUserProductOrAdmin = async (req, res, next) => {
     try {
         const product_id = req.params.id
         const user_id = req.user.id
@@ -54,7 +54,6 @@ const isUserProduct = async (req, res, next) => {
         }
         else {
             res.status(404).json({ forbidden: 'the product does not exists' })
-
         }
     }
     catch (error) {
@@ -63,7 +62,7 @@ const isUserProduct = async (req, res, next) => {
 }
 
 // Its your transaction or u r admin
-const isUserTransaction = async (req, res, next) => {
+const isUserTransactionOrAdmin = async (req, res, next) => {
     try {
         // if (req.user.user_role == 'admin') {
         //     next()
@@ -110,39 +109,10 @@ const isUserTransactions = async (req, res, next) => {
     }
 }
 
-// is logged in
-// const isLogged = (req, res, next) => {
-//     try {
-//         const bearerToken = req.headers['authorization']
-//         if (bearerToken) {
-//             token = bearerToken.split(' ')[1]
-//             jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
-//                 if (error){
-//                     console.log(error)
-//                 }
-//             else if (payload.user_role == 'admin') {
-//                     next()
-//                 }
-//                 else {
-//                     res.status(403).send('You are already logged')
-//                 }
-//             })
-//         }
-//         else {
-//             next()
-//         }
-//     }
-//     catch (error) {
-//         res.status(500).json({ error })
-//     }
-// }
-
-
 module.exports = {
     isAdmin,
     // isUser,
-    isUserProduct,
-    isUserTransaction,
+    isUserProductOrAdmin,
+    isUserTransactionOrAdmin,
     isUserTransactions,
-    // isLogged
 }

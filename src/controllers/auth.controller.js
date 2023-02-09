@@ -1,4 +1,4 @@
-const { passwordHash, passwordCompare } = require("../utils/bcrypt")
+const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 const jwt = require("jsonwebtoken")
 const { user } = require("../models")
 require('dotenv').config()
@@ -55,7 +55,13 @@ const signUp = async (req, res, next) => {
                 user_lastname,
                 user_dni
             })
-            res.status(200).json(newUser)
+            res.status(200).json({
+                "User name": newUser.user_name,
+                "Name": newUser.user_realname,
+                "Lastname": newUser.user_lastname,
+                "DNI": newUser.user_dni,
+                "Birthdate": newUser.user_birthdate
+            })
         }
         else {
             const token = bearerToken.split(' ')[1]

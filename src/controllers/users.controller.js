@@ -1,6 +1,6 @@
 const { user } = require("../models")
 
-// Get one user by id
+// Get user by id
 const getUserById = async (req, res) => {
     try {
         const id = req.params.id
@@ -21,13 +21,25 @@ const getUserById = async (req, res) => {
 const updateOwnUser = async (req, res) => {
     try {
         const id = req.user.id
-        const { user_name, name, user_email } = req.body
+        const { user_name, user_realname, user_lastname, user_dni, user_birthdate, user_email,user_password  } = req.body
         await user.update({
             user_name,
-            name,
-            user_email
+            user_realname,
+            user_lastname,
+            user_dni,
+            user_email,
+            user_birthdate,
+            user_password,
         }, { where: { id } })
-        res.status(200).json({ id, user_name, name, user_email })
+        res.status(200).json({
+            id,
+            "User name": user_name,
+            "Name": user_realname,
+            "Lastname": user_lastname,
+            "DNI": user_dni,
+            "Email": user_email,
+            "Birthdate": user_birthdate
+        })
     }
     catch (error) {
         res.status(500).json({ error })

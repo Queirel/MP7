@@ -13,6 +13,23 @@ const getOwnTransactions = async (req, res) => {
     }
 }
 
+// Get own transaction by id
+const getTransactionById = async (req, res) => {
+    try {
+        const id = req.params.id
+        const getTransaction = await transaction.findOne({ where: { id } })
+        // if (getTransaction) {
+            res.status(200).json(getTransaction)
+        // }
+        // else {
+        //     res.status(404).send('Transaction does not exists')
+        // }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
 // Create a transaction
 const saveTransaction = async (req, res) => {
     try {
@@ -38,25 +55,9 @@ const saveTransaction = async (req, res) => {
     }
 }
 
-// Get own transaction
-const getTransaction = async (req, res) => {
-    try {
-        const id = req.params.id
-        const getTransaction = await transaction.findOne({ where: { id } })
-        // if (getTransaction) {
-            res.status(200).json(getTransaction)
-        // }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
-}
-
-// Cancel transaction
-const cancelTransaction = async (req, res) => {
+// Cancel own transaction by id
+// Check admin (next)
+const cancelTransactionById = async (req, res, next) => {
     try {
         const id = req.params.id
         // const getTransaction = await transaction.findOne({ where: { id } })
@@ -79,9 +80,9 @@ const cancelTransaction = async (req, res) => {
 
 
 module.exports = {
-    getTransaction,
-    saveTransaction,
+    getTransactionById,
     getOwnTransactions,
-    cancelTransaction
+    saveTransaction,
+    cancelTransactionById
 }
 

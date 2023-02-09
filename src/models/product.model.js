@@ -51,6 +51,11 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    prod_published: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
     prod_category: {
       type: DataTypes.ENUM('electronics', 'toys', 'tools', 'fashion'),
       allowNull: false

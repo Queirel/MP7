@@ -1,19 +1,26 @@
 const { Router } = require("express")
-const { getUserByIdAdmin, getAllTransactions, deleteTransaction, getAllUsers, deleteUserById } = require("../controllers/admin.controller")
+const { getUserByIdAdmin, getAllTransactionsAdmin, deleteTransactionAdmin, getAllUsersAdmin, deleteUserByIdAdmin, saveTransactionAdmin, updateUserByIdAdmin } = require("../controllers/admin.controller")
 const { deleteProduct } = require("../controllers/products.controller");
-const router = Router()
-// const { isAdmin } = require("../middleware/authorization");
-const authentication = require("../middleware/authentication");
 const { isAdmin } = require("../middleware/authorization");
+const authentication = require("../middleware/authentication");
+const router = Router()
 
-router.get('/users/all', authentication, isAdmin, getAllUsers)
-router.get('/transactions/all', getAllTransactions)
-router.get('/users/:id', getUserByIdAdmin)
-// router.post('/', saveProductAdmin) asdasdsad
-// router.put('/users/:id', updateUserByIdAdmin)
-// router.put('/:id', updateProductAdmin) asdasdasd
-router.delete('/users/:id', deleteUserById)
-router.delete('/transaction/:id', deleteTransaction)
-router.delete('/:id', deleteProduct)
+// Users
+router.get('/users/all', authentication, isAdmin, getAllUsersAdmin)
+router.get('/users/:id', authentication, isAdmin, getUserByIdAdmin)
+router.put('/users/:id', authentication, isAdmin, updateUserByIdAdmin)
+router.delete('/users/:id', authentication, isAdmin, deleteUserByIdAdmin)
+
+// Transactions
+router.get('/transactions/all', authentication, isAdmin, getAllTransactionsAdmin)
+router.post('/transactions', authentication, isAdmin, saveTransactionAdmin)
+
+//      --------------Other Admin routes-------------:
+//  Sign up being admin :           router.post('/up', signUp, signUpAdmin)
+//  Save Product:                   router.post('/', authentication, isAdmin, saveProductAdmin)
+//  Update anytransaction by id:    router.put('/:id', authentication, isUserTransactionOrAdmin, cancelTransactionById, updateTransactionAdmin)
+//  Update any transaction by id:   router.put('/:id', authentication, isUserProductOrAdmin, updateProduct, updateProductAdmin)
+//  Delete any transaction by id:   router.delete('/transactions/:id', authentication, isAdmin, deleteTransactionAdmin)
+//  Delete any product by id:       router.delete('/product/:id', authentication, isAdmin, deleteProduct)
 
 module.exports = router

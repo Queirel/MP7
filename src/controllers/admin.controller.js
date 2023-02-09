@@ -1,7 +1,5 @@
 const { transaction } = require("../models")
-const { product } = require("../models")
 const { user } = require("../models")
-
 
 // Get user by id
 const getUserByIdAdmin = async (req, res) => {
@@ -15,7 +13,7 @@ const getUserByIdAdmin = async (req, res) => {
 }
 
 // Get all users
-const getAllUsers = async (req, res) => {
+const getAllUsersAdmin = async (req, res) => {
     try {
     const getUsers = await user.findAll({ offset: 1, limit: 7 })
     res.status(200).json(getUsers)
@@ -26,7 +24,7 @@ const getAllUsers = async (req, res) => {
 }
 
 // Get all transactions
-const getAllTransactions = async (req, res) => {
+const getAllTransactionsAdmin = async (req, res) => {
     try {
         const getTransactions = await transaction.findAll({ offset: 1, limit: 10 })
         res.status(200).json(getTransactions)
@@ -36,8 +34,82 @@ const getAllTransactions = async (req, res) => {
     }
 }
 
+// Create Transaction
+const saveTransactionAdmin  = async (req, res) => {
+    try {
+        const { trans_prod_id, trans_prod_quantity } = req.body
+        const user_id = req.user.id
+        const getProduct = await product.findOne({ where: { id: trans_prod_id } })
+        const prod_user_id = getProduct.prod_user_id
+        console.log(user_id, prod_user_id)
+        if (user_id == prod_user_id) {
+            res.status(401).json('u cant buy your own product')
+        }
+        else {
+            const getTransaction = await transaction.create({
+                trans_prod_id,
+                trans_prod_quantity,
+                trans_buy_user_id: user_id,
+            })
+            res.status(200).json(getTransaction)
+        }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
+
+// Save a product
+// Check admin (next)
+const saveProductAdmin = async (req, res) => {
+    try {
+        const user_id = req.user.id
+        const { prod_name, prod_price, prod_stock, prod_category } = req.body
+        const saveProduct = await product.create({
+            prod_name,
+            prod_user_id: user_id,
+            prod_price,
+            prod_stock,
+            prod_category
+        })
+        res.status(200).json(saveProduct)
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
+// Update an own product
+const updateProductAdmin = async (req, res) => {
+    try {
+        const id = req.params.id
+        const getProduct = await product.findOne({ where: { id } })
+        if (getProduct) {
+            const { prod_name, prod_user_id, prod_price, prod_stock, prod_category } = req.body
+            await product.update({
+                prod_name,
+                prod_user_id,
+                prod_price,
+                prod_stock,
+                prod_category,
+            }, {
+                where: { id }
+            })
+            res.status(200).json({ id, prod_name, prod_user_id, prod_price, prod_stock, prod_category })
+        }
+        else {
+            res.status(404).send('Product does not exists')
+        }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
+
 // Delete a transaction
-const deleteTransaction = async (req, res) => {
+const deleteTransactionAdmin = async (req, res) => {
     try {
         const id = req.params.id
         // const transaction = await Users.findOne({ where: { id } })
@@ -55,7 +127,7 @@ const deleteTransaction = async (req, res) => {
 }
 
 // Update user by id
-const updateUserById = async (req, res) => {
+const updateUserByIdAdmin = async (req, res) => {
     try {
         const id = req.params.id
         const getuser = await user.findOne({ where: { id } })
@@ -76,7 +148,7 @@ const updateUserById = async (req, res) => {
 }
 
 // Delete user by id:
-const deleteUserById = async (req, res) => {
+const deleteUserByIdAdmin = async (req, res) => {
     try {
         const id = req.params.id
         const getuser = await user.findOne({ where: { id } })
@@ -93,11 +165,36 @@ const deleteUserById = async (req, res) => {
     }
 }
 
+const updateTransactionAdmin = async (req, res) => {
+    try {
+        const id = req.params.id
+        // const getTransaction = await transaction.findOne({ where: { id } })
+        // if (getTransaction) {
+            await transaction.update({
+                trans_cancel: true,
+            }, {
+                where: { id }
+            })
+            res.status(200).json(`Transaction ${id} cancelled`)
+        }
+        // else {
+        //     res.status(404).send('Transaction does not exists')
+        // }
+    // }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
 module.exports = {
-    deleteTransaction,
-    getAllTransactions,
-    getAllUsers,
-    updateUserById,
-    deleteUserById,
-    getUserByIdAdmin
+    getAllUsersAdmin,
+    getUserByIdAdmin,
+    getAllTransactionsAdmin,
+    saveTransactionAdmin,
+    saveProductAdmin,
+    updateProductAdmin,
+    updateUserByIdAdmin,
+    updateTransactionAdmin,
+    deleteTransactionAdmin,
+    deleteUserByIdAdmin
 }

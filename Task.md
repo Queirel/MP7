@@ -45,6 +45,8 @@ Infrastructure
     - 
 
 EPIC Comprar
+#    - Como User tengo que poder ver las compras realizadas
+#    - Como User tengo que poder cancelar una compra
     - Como User tengo que poder listar productos
 #        - Agregar GET de productos por
 #           - Agregar ruta para filtrado por id
