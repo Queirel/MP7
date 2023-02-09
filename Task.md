@@ -1,4 +1,3 @@
-[10:00, 6/2/2023] Juan Ignacio Cidre: Theory 
 - HTTP
 - Authentication vs Authorization
 `- Feature Branch / Merge / Pull Request`
@@ -32,7 +31,6 @@ Infrastructure
 -` AWS Cloudwatch`
 `- AWS: Fargate`
 
-[10:00, 6/2/2023] Juan Ignacio Cidre: Feb 5
 
 - Quitar Role de SignUp
 - Eliminar los migrations

@@ -25,6 +25,6 @@ app.use('/sign', loginRoutes)
 app.use('/users', userRoutes)
 app.use('/products', productsRoutes)
 app.use('/transactions', transactionsRoutes)
-app.use('/admin', isAdmin, adminRoutes)
+app.use('/admin', adminRoutes)
 
 module.exports = app

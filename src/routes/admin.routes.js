@@ -3,9 +3,10 @@ const { getUserByIdAdmin, getAllTransactions, deleteTransaction, getAllUsers, de
 const { deleteProduct } = require("../controllers/products.controller");
 const router = Router()
 // const { isAdmin } = require("../middleware/authorization");
-// const authentication = require("../middleware/authentication");
+const authentication = require("../middleware/authentication");
+const { isAdmin } = require("../middleware/authorization");
 
-router.get('/users/all', getAllUsers)
+router.get('/users/all', authentication, isAdmin, getAllUsers)
 router.get('/transactions/all', getAllTransactions)
 router.get('/users/:id', getUserByIdAdmin)
 // router.post('/', saveProductAdmin) asdasdsad

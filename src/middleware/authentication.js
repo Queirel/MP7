@@ -5,7 +5,7 @@ const authentication = (req, res, next) => {
     try {
         const bearerToken = req.headers['authorization']
         if (bearerToken) {
-            token = bearerToken.split(' ')[1]
+            const token = bearerToken.split(' ')[1]
             jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
                 if (error) {
                     res.status(403).send('Some error while verifying token')

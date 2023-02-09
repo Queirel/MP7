@@ -1,9 +1,11 @@
 const { product } = require("../models");
 const { transaction } = require("../models");
+const jwt = require("jsonwebtoken")
+require('dotenv').config()
 
 // Is an admin
 const isAdmin = (req, res, next) => {
-    try {
+    // try {
         const user_role = req.user.user_role
         if (user_role == 'admin') {
             next()
@@ -11,10 +13,10 @@ const isAdmin = (req, res, next) => {
         else {
             res.status(401).json({ forbidden: 'you does not have access' })
         }
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
+    // }
+    // catch (error) {
+    //     res.status(500).json({ error })
+    // }
 }
 
 
@@ -109,28 +111,31 @@ const isUserTransactions = async (req, res, next) => {
 }
 
 // is logged in
-const isLogged = (req, res, next) => {
-    try {
-        const bearerToken = req.headers['authorization']
-        if (bearerToken) {
-            token = bearerToken.split(' ')[1]
-            jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
-                if (payload.user_role == 'admin') {
-                    next()
-                }
-                else {
-                    res.status(403).send('You are already logged')
-                }
-            })
-        }
-        else {
-            next()
-        }
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
-}
+// const isLogged = (req, res, next) => {
+//     try {
+//         const bearerToken = req.headers['authorization']
+//         if (bearerToken) {
+//             token = bearerToken.split(' ')[1]
+//             jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
+//                 if (error){
+//                     console.log(error)
+//                 }
+//             else if (payload.user_role == 'admin') {
+//                     next()
+//                 }
+//                 else {
+//                     res.status(403).send('You are already logged')
+//                 }
+//             })
+//         }
+//         else {
+//             next()
+//         }
+//     }
+//     catch (error) {
+//         res.status(500).json({ error })
+//     }
+// }
 
 
 module.exports = {
@@ -139,5 +144,5 @@ module.exports = {
     isUserProduct,
     isUserTransaction,
     isUserTransactions,
-    isLogged
+    // isLogged
 }
