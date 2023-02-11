@@ -5,7 +5,8 @@ const { product } = require("../models")
 const getOwnTransactions = async (req, res) => {
     try {
         const trans_buy_user_id = req.user.id
-        const getTransactions = await transaction.findAll({where:{trans_buy_user_id}, offset: 1, limit: 7 })
+        const {limit, offset} = req.body
+        const getTransactions = await transaction.findAll({where:{trans_buy_user_id}, offset: offset, limit: limit })
         res.status(200).json(getTransactions)
     }
     catch (error) {
@@ -18,12 +19,12 @@ const getTransactionById = async (req, res) => {
     try {
         const id = req.params.id
         const getTransaction = await transaction.findOne({ where: { id } })
-        // if (getTransaction) {
+        if (getTransaction) {
             res.status(200).json(getTransaction)
-        // }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
+        }
+        else {
+            res.status(404).send('Transaction does not exists')
+        }
     }
     catch (error) {
         res.status(500).json({ error })
@@ -56,12 +57,20 @@ const saveTransaction = async (req, res) => {
 }
 
 // Cancel own transaction by id
-// Check admin (next)
-const cancelTransactionById = async (req, res, next) => {
+const cancelTransactionById = async (req, res) => {
     try {
         const id = req.params.id
-        // const getTransaction = await transaction.findOne({ where: { id } })
-        // if (getTransaction) {
+        const getTransaction = await transaction.findOne({ where: { id } })
+        if (getTransaction) {
+            if(getTransaction.trans_cancel == true){
+                await transaction.update({
+                    trans_cancel: false,
+                }, {
+                    where: { id }
+                })
+                res.status(404).json(`Transaction ${id} enabled`)
+            }
+            else{
             await transaction.update({
                 trans_cancel: true,
             }, {
@@ -69,10 +78,11 @@ const cancelTransactionById = async (req, res, next) => {
             })
             res.status(200).json(`Transaction ${id} cancelled`)
         }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
-    // }
+    }
+        else {
+            res.status(404).send('Transaction does not exists')
+        }
+    }
     catch (error) {
         res.status(500).json({ error })
     }

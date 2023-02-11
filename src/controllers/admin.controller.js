@@ -1,11 +1,13 @@
 const { transaction } = require("../models")
 const { user } = require("../models")
+const { product } = require("../models")
 
 // Get user by id
 const getUserByIdAdmin = async (req, res) => {
     try {
-    const getUsers = await user.findAll({ offset: 1, limit: 7 })
-    res.status(200).json(getUsers)
+        const id = req.params.id
+        const getUser = await user.findOne({where:{id}})
+        res.status(200).json({"User":getUser})
     }
     catch (error) {
         res.status(500).json({ error })
@@ -15,8 +17,9 @@ const getUserByIdAdmin = async (req, res) => {
 // Get all users
 const getAllUsersAdmin = async (req, res) => {
     try {
-    const getUsers = await user.findAll({ offset: 1, limit: 7 })
-    res.status(200).json(getUsers)
+        const {offset, limit} = req.body
+        const getUsers = await user.findAll({ offset: offset, limit: limit })
+        res.status(200).json({"Users":getUsers})
     }
     catch (error) {
         res.status(500).json({ error })
@@ -26,7 +29,8 @@ const getAllUsersAdmin = async (req, res) => {
 // Get all transactions
 const getAllTransactionsAdmin = async (req, res) => {
     try {
-        const getTransactions = await transaction.findAll({ offset: 1, limit: 10 })
+        const {limit, offset} = req.body
+        const getTransactions = await transaction.findAll({ offset:offset, limit: limit })
         res.status(200).json(getTransactions)
     }
     catch (error) {
@@ -35,7 +39,7 @@ const getAllTransactionsAdmin = async (req, res) => {
 }
 
 // Create Transaction
-const saveTransactionAdmin  = async (req, res) => {
+const saveTransactionAdmin = async (req, res) => {
     try {
         const { trans_prod_id, trans_prod_quantity } = req.body
         const user_id = req.user.id
@@ -65,13 +69,14 @@ const saveTransactionAdmin  = async (req, res) => {
 const saveProductAdmin = async (req, res) => {
     try {
         const user_id = req.user.id
-        const { prod_name, prod_price, prod_stock, prod_category } = req.body
+        const { prod_name, prod_price, prod_stock, prod_category, prod_published } = req.body
         const saveProduct = await product.create({
             prod_name,
             prod_user_id: user_id,
             prod_price,
             prod_stock,
-            prod_category
+            prod_category,
+            prod_published
         })
         res.status(200).json(saveProduct)
     }
@@ -82,44 +87,52 @@ const saveProductAdmin = async (req, res) => {
 
 // Update an own product
 const updateProductAdmin = async (req, res) => {
-    try {
+    // try {
         const id = req.params.id
         const getProduct = await product.findOne({ where: { id } })
         if (getProduct) {
-            const { prod_name, prod_user_id, prod_price, prod_stock, prod_category } = req.body
-            await product.update({
+            const { prod_name, prod_user_id, prod_price, prod_stock, prod_category, prod_published } = req.body
+             await product.update({
                 prod_name,
                 prod_user_id,
                 prod_price,
                 prod_stock,
                 prod_category,
+                prod_published
             }, {
                 where: { id }
             })
-            res.status(200).json({ id, prod_name, prod_user_id, prod_price, prod_stock, prod_category })
+            res.status(200).json({ 
+                id,
+                prod_name,
+                prod_user_id,
+                prod_price,
+                prod_stock,
+                prod_category,
+                prod_published 
+            })
         }
         else {
             res.status(404).send('Product does not exists')
         }
-    }
-    catch (error) {
-        res.status(500).json({ error })
-    }
+    // }
+    // catch (error) {
+    //     res.status(500).json({ error })
+    // }
 }
 
 
-// Delete a transaction
+// Delete a transaction by id
 const deleteTransactionAdmin = async (req, res) => {
     try {
         const id = req.params.id
-        // const transaction = await Users.findOne({ where: { id } })
-        // if (transaction) {
-            await transaction.destroy({ where: { id } })
+        const getTransaction = await transaction.destroy({ where: { id } })
+        if (getTransaction) {
             res.status(200).json(`Transaction ${id} deleted`)
-        // }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
+        }
+        else {
+            res.status(404).json('Transaction does not exists')
+        }
     }
     catch (error) {
         res.status(500).json({ error })
@@ -132,11 +145,26 @@ const updateUserByIdAdmin = async (req, res) => {
         const id = req.params.id
         const getuser = await user.findOne({ where: { id } })
         if (getuser) {
-            const { user_name } = req.body
+            const { user_name, user_password, user_realname, user_lastname, user_dni, user_role, user_birthdate } = req.body
             await user.update({
                 user_name,
+                user_password,
+                user_realname,
+                user_lastname,
+                user_dni,
+                user_role,
+                user_birthdate
             }, { where: { id } })
-            res.status(200).json({ id, user_name })
+            res.status(200).json({
+                id,
+                user_name,
+                user_password,
+                user_realname,
+                user_lastname,
+                user_dni,
+                user_role,
+                user_birthdate
+            })
         }
         else {
             res.status(404).send('User does not exists')
@@ -170,16 +198,16 @@ const updateTransactionAdmin = async (req, res) => {
         const id = req.params.id
         // const getTransaction = await transaction.findOne({ where: { id } })
         // if (getTransaction) {
-            await transaction.update({
-                trans_cancel: true,
-            }, {
-                where: { id }
-            })
-            res.status(200).json(`Transaction ${id} cancelled`)
-        }
-        // else {
-        //     res.status(404).send('Transaction does not exists')
-        // }
+        await transaction.update({
+            trans_cancel: true,
+        }, {
+            where: { id }
+        })
+        res.status(200).json(`Transaction ${id} cancelled`)
+    }
+    // else {
+    //     res.status(404).send('Transaction does not exists')
+    // }
     // }
     catch (error) {
         res.status(500).json({ error })
