@@ -6,11 +6,12 @@ require('dotenv').config()
 
 // Login
 const signIn = async (req, res) => {
-    try {
-        const bearerToken = req.headers['authorization']
-        if (!bearerToken) {
-            const { user_name, user_password } = req.body
-            const getuser = await user.findOne({ where: { user_name } })
+    // try {
+    const bearerToken = req.headers['authorization']
+    if (!bearerToken) {
+        const { user_name, user_password } = req.body
+        const getuser = await user.findOne({ where: { user_name } })
+        if (getuser) {
             const passCompare = await passwordCompare(user_password, getuser.user_password)
             if (passCompare) {
                 const payload = {
@@ -27,16 +28,20 @@ const signIn = async (req, res) => {
                 })
             }
             else {
-                res.status(404).send('User id or password incorrect')
+                res.status(404).send('User or password incorrect')
             }
         }
         else {
-            res.status(403).send('You are already logged')
+            res.status(404).send('Username or password incorrect')
         }
     }
-    catch (error) {
-        res.status(500).json({ error })
+    else {
+        res.status(403).send('You are already logged')
     }
+    // }
+    // catch (error) {
+    //     res.status(500).json({ error })
+    // }
 }
 
 // Register ---> Create User
@@ -45,7 +50,7 @@ const signUp = async (req, res, next) => {
         const bearerToken = req.headers['authorization']
         console.log(bearerToken)
         if (!bearerToken) {
-            const { user_name, user_dni, user_password,user_realname, user_birthdate, user_lastname } = req.body
+            const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname } = req.body
             const passHash = await passwordHash(user_password)
             const newUser = await user.create({
                 user_name,
@@ -87,7 +92,7 @@ const signUp = async (req, res, next) => {
 // Register ---> Create User By Admin (with roles)
 const signUpAdmin = async (req, res) => {
     try {
-        const { user_name, user_dni, user_password,user_realname, user_birthdate, user_lastname, user_role } = req.body
+        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_role } = req.body
         const passHash = await passwordHash(user_password)
         const newUser = await user.create({
             user_name,

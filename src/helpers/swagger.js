@@ -13,11 +13,24 @@ const swaggerSpec = {
                 url: 'https://github.com/Queirel/MP7',
             },
         },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                }
+            }
+        },
+        security: [{
+            bearerAuth: []
+        }],
         servers: [{
             url: 'http://localhost:3000/',
         }],
     },
-    apis: ['./src/documentation/*.yml'],
+    // apis: ['./src/controllers/*.js'],
+   apis: ['./src/documentation/*.js']
 }
 
 module.exports = swaggerSpec

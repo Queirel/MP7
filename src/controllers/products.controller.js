@@ -1,7 +1,6 @@
 const { product } = require("../models");
 const { user } = require("../models");
 
-//Get all products
 const getProducts = async (req, res) => {
     try {
         const { offset, limit } = req.body
@@ -13,8 +12,7 @@ const getProducts = async (req, res) => {
     }
 }
 
-// Get product
-const getProduct = async (req, res) => {
+const getProductById = async (req, res) => {
     try {
         const id = req.params.id
         const getProduct = await product.findOne({ where: { id }, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
@@ -30,13 +28,12 @@ const getProduct = async (req, res) => {
     }
 }
 
-//Get products by category
 const getProdByCategory = async (req, res) => {
     try {
         const {limit,offset} = req.body
         const prod_category = req.params.category
         const getProduct = await product.findAll({ where: { prod_category }, limit:limit, offset:offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (getProduct) {
+        if (!getProduct.length == 0 ) {
             res.status(200).json(getProduct)
         }
         else {
@@ -48,7 +45,6 @@ const getProdByCategory = async (req, res) => {
     }
 }
 
-// Get a products by user_id
 const getProductByUserId = async (req, res) => {
     try {
         const prod_user_id = req.params.id
@@ -146,7 +142,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
     getProducts,
-    getProduct,
+    getProductById,
     getProdByCategory,
     getProductByUserId,
     saveProductOrAdmin,

@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken")
-// const user = require('../models/users.models')
 
 const authentication = (req, res, next) => {
     try {
@@ -10,20 +9,14 @@ const authentication = (req, res, next) => {
                 if (error) {
                     res.status(403).send('Some error while verifying token')
                 }
-                // else {
-                //     if (payload.user_role == 'admin') {
-                //         req.admin = true
-                //         next()
-                //     }
                     else {
                         req.user = payload
                         next()
-                    // }
                 }
             })
         }
         else {
-            res.status(403).send('U need a token first')
+            res.status(403).send('You must be logged')
         }
      }
     catch (error) {

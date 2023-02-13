@@ -1,6 +1,11 @@
-const { transaction } = require("../models")
-const { user } = require("../models")
-const { product } = require("../models")
+/**
+  * @swagger
+  * tags:
+  *   name: Admin
+  *   description: The user managing API
+  */
+
+
 
 // Get user by id
 const getUserByIdAdmin = async (req, res) => {
@@ -213,17 +218,4 @@ const updateTransactionAdmin = async (req, res) => {
     catch (error) {
         res.status(500).json({ error })
     }
-}
-
-module.exports = {
-    getAllUsersAdmin,
-    getUserByIdAdmin,
-    getAllTransactionsAdmin,
-    saveTransactionAdmin,
-    saveProductAdmin,
-    updateProductAdmin,
-    updateUserByIdAdmin,
-    updateTransactionAdmin,
-    deleteTransactionAdmin,
-    deleteUserByIdAdmin
 }

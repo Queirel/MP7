@@ -1,7 +1,8 @@
 const { user } = require("../models")
 const jwt = require("jsonwebtoken")
 
-// Get user by id
+// Get user by Id
+//Check admin (next)
 const getUserById = async (req, res, next) => {
     try {
     const bearerToken = req.headers['authorization']
@@ -40,7 +41,7 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-// Update own user
+// Update own User
 const updateOwnUser = async (req, res) => {
     try {
         const id = req.user.id
@@ -69,12 +70,18 @@ const updateOwnUser = async (req, res) => {
     }
 }
 
-// Delete own user:
+// Delete own User
 const deleteOwnUser = async (req, res) => {
     try {
         const id = req.user.id
-        await user.destroy({ where: { id } })
-        res.status(200).json(`User deleted`)
+        console.log(req.user.user_role)
+        if (req.user.user_role == 'admin'){
+            res.status(403).json(`You can't delete an admin account`)
+        }
+        else{
+            await user.destroy({ where: { id } })
+            res.status(200).json(`User deleted`)
+        }
     }
     catch (error) {
         res.status(500).json({ error })
