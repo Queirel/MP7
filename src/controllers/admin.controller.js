@@ -41,7 +41,7 @@ const getAllTransactionsAdmin = async (req, res) => {
 }
 
 // Create Transaction
-const saveTransactionAdmin = async (req, res) => {
+const saveTransactionAdminStockControl = async (req, res) => {
     try {
         const { trans_prod_id, trans_prod_quantity, trans_cancel, trans_buy_user_id } = req.body
         const getProduct = await product.findOne({ where: { id: trans_prod_id } })
@@ -334,7 +334,7 @@ module.exports = {
     getAllUsersAdmin,
     getUserByIdAdmin,
     getAllTransactionsAdmin,
-    saveTransactionAdmin,
+    saveTransactionAdminStockControl,
     saveProductAdmin,
     updateProductAdmin,
     updateUserByIdAdmin,

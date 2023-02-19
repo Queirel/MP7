@@ -73,6 +73,23 @@
 *    responses:
 *      200:
 *        description: The user was created
+*        content:
+*          application/json:
+*            examples:
+*              Nacho:
+*                value:
+*                  Username: 10
+*                  Name: Juan
+*                  Lastname: Ignacio
+*                  DNI: 123456
+*                  Birthdate: 10/11/12
+*              Fede:
+*                value:
+*                  Username: 11
+*                  Name: Federico
+*                  Lastname: Queirel
+*                  DNI: 4234234
+*                  Birthdate: 10/11/12
 *      403:
 *        description: You are already logged
 *      500:

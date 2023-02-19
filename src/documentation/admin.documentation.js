@@ -22,6 +22,23 @@
  *     responses:
  *       200:
  *         description: The user information by id
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Nacho:
+ *                 value:
+ *                   Username: 10
+ *                   Name: Juan
+ *                   Lastname: Ignacio
+ *                   DNI: 123456
+ *                   Birthdate: 10/11/12
+ *               Fede:
+ *                 value:
+ *                   Username: 11
+ *                   Name: Federico
+ *                   Lastname: Queirel
+ *                   DNI: 4234234
+ *                   Birthdate: 10/11/12
  *       401:
  *         description: You dont have access
  *       404:
