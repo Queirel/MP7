@@ -3,10 +3,9 @@ const jwt = require("jsonwebtoken")
 const { user } = require("../models")
 require('dotenv').config()
 
-
 // Login
 const signIn = async (req, res) => {
-    // try {
+    try {
     const bearerToken = req.headers['authorization']
     if (!bearerToken) {
         const { user_name, user_password } = req.body
@@ -38,17 +37,16 @@ const signIn = async (req, res) => {
     else {
         res.status(403).send('You are already logged')
     }
-    // }
-    // catch (error) {
-    //     res.status(500).json({ error })
-    // }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
 }
 
 // Register ---> Create User
-const signUp = async (req, res, next) => {
+const signUp = async (req, res) => {
     try {
         const bearerToken = req.headers['authorization']
-        console.log(bearerToken)
         if (!bearerToken) {
             const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname } = req.body
             const passHash = await passwordHash(user_password)
@@ -74,9 +72,6 @@ const signUp = async (req, res, next) => {
                 if (error) {
                     res.status(403).send('Some error while verifying token')
                 }
-                else if (payload.user_role == 'admin') {
-                    next()
-                }
                 else {
                     res.status(401).send('You are already logged')
                 }
@@ -87,7 +82,6 @@ const signUp = async (req, res, next) => {
         res.status(500).json({ error })
     }
 }
-
 
 // Register ---> Create User By Admin (with roles)
 const signUpAdmin = async (req, res) => {
@@ -109,7 +103,6 @@ const signUpAdmin = async (req, res) => {
         res.status(500).json({ error })
     }
 }
-
 
 module.exports = {
     signIn,

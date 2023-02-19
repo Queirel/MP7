@@ -149,7 +149,7 @@
  * @swagger
  * /products:
  *  post:
- *    description: Create a product (Admin can also create products to anyone and select if its published)
+ *    description: Create a product
  *    requestBody:
  *      required: true
  *      content:
@@ -165,12 +165,6 @@
  *                type: integer
  *              prod_category: 
  *                type: string
- *              prod_user_id:
- *                type: integer
- *                description: Admin only
- *              prod_published:  
- *                type: boolean
- *                description: Admin only
  *            required:
  *              - prod_name
  *              - prod_price
@@ -193,7 +187,7 @@
  * @swagger
  * /products/{id}:
  *  put:
- *    description: Features to change (Admin can also change any product and the product owner)
+ *    description: Features to change
  *    parameters:
  *      - in: path
  *        name: id
@@ -217,9 +211,6 @@
  *                type: string
  *              prod_published:  
  *                type: boolean
- *              prod_user_id:
- *                type: integer
- *                description: Admin only
  *    summary: Update a product by id
  *    tags: [Products]
  *    responses:
@@ -237,7 +228,7 @@
  * @swagger
  * /products/{id}:
  *   delete:
- *     description: Delete own product by id (Admin can delete any product)
+ *     description: Delete own product by id
  *     summary: Delete the product by id
  *     tags: [Products]
  *     parameters:

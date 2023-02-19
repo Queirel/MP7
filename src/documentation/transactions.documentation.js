@@ -72,7 +72,7 @@
  * @swagger
  * /transactions/{id}:
  *   get:
- *     description: To see an own transaction by id (Admin can see any transaction)
+ *     description: To see an own transaction by id
  *     summary: Get the transaction by id
  *     tags: [Transactions]
  *     parameters:
@@ -84,11 +84,9 @@
  *         description: Transaction id
  *     responses:
  *       200:
- *         description: Transaction id
- *       403:
+ *         description: Transaction by id
+ *       401:
  *         description: You do not have access
- *       404:
- *         description: Transaction does not exists
  *       500:
  *         description: Some error happened
  */
@@ -107,13 +105,10 @@
  *            properties:
  *              trans_prod_id:
  *                type: integer
- *              trans_buy_user_id:
- *                type: integer
  *              trans_prod_quantity:
  *                type: integer
  *            required:
  *              - trans_prod_id
- *              - trans_buy_user_id
  *              - trans_prod_quantity
  *    summary: Create a transaction
  *    tags: [Transactions]
@@ -130,7 +125,7 @@
  * @swagger
  * /transactions/{id}:
  *  put:
- *    description: Cancel an own transaction by id (Admin can cancel any transaction)
+ *    description: Cancel an own transaction by id
  *    summary: Cancel a transaction
  *    tags: [Transactions]
  *    parameters:
@@ -142,11 +137,11 @@
  *        description: The transaction id
  *    responses:
  *      200:
- *        description: The transaction was cancelled
- *      403:
+ *        description: The transaction was cancelled // is already cancelled
+ *      401:
  *        description: You must be logged
  *      404:
- *        description: Transaction does not exists
+ *        description: You dont have access
  *      500:
  *        description: Some error happened
  */

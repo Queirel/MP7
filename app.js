@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Routes
-app.use('/', adminRoutes)
+app.use('/admin', adminRoutes)
 app.use('/sign', loginRoutes)
 app.use('/users', userRoutes)
 app.use('/products', productsRoutes)

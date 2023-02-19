@@ -1,41 +1,19 @@
 const { user } = require("../models")
 const jwt = require("jsonwebtoken")
+const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 
 // Get user by Id
-//Check admin (next)
-const getUserById = async (req, res, next) => {
+const getUserById = async (req, res) => {
     try {
-    const bearerToken = req.headers['authorization']
-    if (bearerToken) {
-        const token = bearerToken.split(' ')[1]
-        jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
-            req.user = payload
-        })
-        if (req.user.user_role == 'admin') {
-            next()
-        }
-        else {
-            const id = req.params.id
-            const getUser = await user.findOne({ where: { id } })
-            if (getUser) {
-                res.status(200).json({ "User name": getUser.user_name })
+                const id = req.params.id
+                const getUser = await user.findOne({ where: { id } })
+                if (getUser) {
+                    res.status(200).json({ "User name": getUser.user_name })
+                }
+                else {
+                    res.status(404).send('User does not exists')
+                }
             }
-            else {
-                res.status(404).send('User does not exists')
-            }
-        }
-    }
-    else {
-        const id = req.params.id
-        const getUser = await user.findOne({ where: { id } })
-        if (getUser) {
-            res.status(200).json({ "User name": getUser.user_name })
-        }
-        else {
-            res.status(404).send('User does not exists')
-        }
-    }
-    }
     catch (error) {
         res.status(500).json({ error })
     }
@@ -45,24 +23,52 @@ const getUserById = async (req, res, next) => {
 const updateOwnUser = async (req, res) => {
     try {
         const id = req.user.id
-        const { user_name, user_realname, user_lastname, user_dni, user_birthdate, user_email, user_password } = req.body
+        const getUser = await user.findOne({ where: { id } })
+        const { user_name, user_realname, user_lastname, user_dni, user_birthdate } = req.body
+        if (!user_name) {
+            getUser_name = getUser.dataValues.user_name
+        }
+        else {
+            getUser_name = user_name
+        }
+        if (!user_realname) {
+            getUser_realname = getUser.dataValues.user_realname
+        }
+        else {
+            getUser_realname = user_realname
+        }
+        if (!user_lastname) {
+            getUser_lastname = getUser.dataValues.user_lastname
+        }
+        else {
+            getUser_lastname = user_lastname
+        }
+        if (!user_dni) {
+            getUser_dni = getUser.dataValues.user_dni
+        }
+        else {
+            getUser_dni = user_dni
+        }
+        if (!user_birthdate) {
+            getUser_birthdate = getUser.dataValues.user_birthdate
+        }
+        else {
+            getUser_birthdate = user_birthdate
+        }
         await user.update({
-            user_name,
-            user_realname,
-            user_lastname,
-            user_dni,
-            user_email,
-            user_birthdate,
-            user_password,
+            user_name: getUser_name,
+            user_realname: getUser_realname,
+            user_lastname: getUser_lastname,
+            user_dni: getUser_dni,
+            user_birthdate: getUser_birthdate,
         }, { where: { id } })
         res.status(200).json({
             id,
-            "User name": user_name,
-            "Name": user_realname,
-            "Lastname": user_lastname,
-            "DNI": user_dni,
-            "Email": user_email,
-            "Birthdate": user_birthdate
+            "User name": getUser_name,
+            "Name": getUser_realname,
+            "Lastname": getUser_lastname,
+            "DNI": getUser_dni,
+            "Birthdate": getUser_birthdate
         })
     }
     catch (error) {
@@ -74,11 +80,10 @@ const updateOwnUser = async (req, res) => {
 const deleteOwnUser = async (req, res) => {
     try {
         const id = req.user.id
-        console.log(req.user.user_role)
-        if (req.user.user_role == 'admin'){
+        if (req.user.user_role == 'admin') {
             res.status(403).json(`You can't delete an admin account`)
         }
-        else{
+        else {
             await user.destroy({ where: { id } })
             res.status(200).json(`User deleted`)
         }
@@ -88,8 +93,43 @@ const deleteOwnUser = async (req, res) => {
     }
 }
 
+// Password change
+const updateOwnUserPassword = async (req, res) => {
+    try {
+        const id = req.user.id
+        const getUser = await user.findOne({ where: { id } })
+        const { oldPassword, newPassword } = req.body
+        if (!oldPassword || !newPassword) {
+            res.status(404).json("You must fill the fields")
+        }
+        else {
+            const passCompare = await passwordCompare(oldPassword, getUser.user_password)
+            if (passCompare) {
+                if (oldPassword == newPassword) {
+                    res.status(404).json("New password cannot be the same as the old one")
+                }
+                else {
+                    const passHash = await passwordHash(newPassword)
+                    await user.update({
+                        user_password: passHash,
+                    }, { where: { id } })
+                    res.status(200).json("Password has been changed")
+                }
+            }
+            else {
+                res.status(404).json("Incorrect password")
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
+
 module.exports = {
     getUserById,
     updateOwnUser,
-    deleteOwnUser
+    deleteOwnUser,
+    updateOwnUserPassword
 }

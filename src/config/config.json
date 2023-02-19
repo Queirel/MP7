@@ -12,6 +12,12 @@
     
     "migrateStorage": "sequelize",
     "migrateStorageTableName": "migrations"
+  }, 
+  "test": {
+    "username": "postgres",
+    "password": "password",
+    "database": "MP7",
+    "host": "localhost",
+    "dialect": "postgres"
   }
-  
 }

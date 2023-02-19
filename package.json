@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "migrationout": "npx sequelize-cli db:migrate:undo:all",
-    "migration": "npx sequelize-cli db:migrate:undo:all",
-    "postmigration": "npx sequelize-cli db:migrate",
+    "premigration": "npx sequelize-cli db:migrate:undo:all",
+    "migration": "npx sequelize-cli db:migrate",
+    "postmigration": "npx sequelize-cli db:seed:all",
     "seedout": "npx sequelize-cli db:seed:undo:all",
     "seed": "npx sequelize-cli db:seed:undo:all",
     "postseed": "npx sequelize-cli db:seed:all",
     "dev": "nodemon /src/index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose ./__test__/",
+    "test:coverage": "jest --coverage",
+    "test:runinband": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +32,9 @@
     "swagger-ui-express": "^4.6.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "faker": "^6.6.6",
+    "jest": "^29.4.2",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   }
 }

@@ -7,11 +7,10 @@ const { sequelize } = require('./src/models')
 // Listen
 app.listen(port, async () => {
     console.log(`Server on port ${port}`)
-
     try {
         await sequelize.authenticate();
         console.log('Database connection established.');
-    } catch (e) {
-        console.log('Database connection failed', e);
+    } catch (error) {
+        console.log('Database connection failed', error);
     }
 })

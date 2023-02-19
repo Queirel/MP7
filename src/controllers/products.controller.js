@@ -1,5 +1,4 @@
 const { product } = require("../models");
-const { user } = require("../models");
 
 const getProducts = async (req, res) => {
     try {
@@ -30,10 +29,10 @@ const getProductById = async (req, res) => {
 
 const getProdByCategory = async (req, res) => {
     try {
-        const {limit,offset} = req.body
+        const { limit, offset } = req.body
         const prod_category = req.params.category
-        const getProduct = await product.findAll({ where: { prod_category }, limit:limit, offset:offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (!getProduct.length == 0 ) {
+        const getProduct = await product.findAll({ where: { prod_category }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
+        if (!getProduct.length == 0) {
             res.status(200).json(getProduct)
         }
         else {
@@ -48,8 +47,8 @@ const getProdByCategory = async (req, res) => {
 const getProductByUserId = async (req, res) => {
     try {
         const prod_user_id = req.params.id
-        const {limit, offset} = req.body
-        const getProducts = await product.findAll({ where: { prod_user_id }, limit:limit,offset:offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
+        const { limit, offset } = req.body
+        const getProducts = await product.findAll({ where: { prod_user_id }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
         if (!getProducts.length == 0) {
             res.status(200).json(getProducts)
         }
@@ -63,8 +62,7 @@ const getProductByUserId = async (req, res) => {
 }
 
 // Save a product
-// Check admin (next)
-const saveProductOrAdmin = async (req, res) => {
+const saveProduct = async (req, res) => {
     try {
         const user_id = req.user.id
         const { prod_name, prod_price, prod_stock, prod_category } = req.body
@@ -83,38 +81,58 @@ const saveProductOrAdmin = async (req, res) => {
 }
 
 // Update an own product
-// Check admin (next)
-const updateProductOrAdmin = async (req, res, next) => {
+const updateProduct = async (req, res) => {
     try {
         const product_id = req.params.id
-        const user_id = req.user.id
         const getProduct = await product.findOne({ where: { id: product_id } })
-        const getUser = await user.findOne({ where: { id: user_id } })
-        if (getProduct) {
-            const prod_user_id = getProduct.prod_user_id
-            if (getUser.user_role == "admin") {
-                next()
-            }
-            else if(user_id == prod_user_id) {
-                const { prod_name, prod_price, prod_stock, prod_category, prod_published } = req.body
-                await product.update({
-                    prod_name,
-                    prod_price,
-                    prod_stock,
-                    prod_category,
-                    prod_published
-                }, {
-                    where: { id:product_id }
-                })
-                res.status(200).json({ prod_name, prod_user_id , prod_price, prod_stock, prod_category,prod_published  })
-            }
-            else{
-                res.status(401).send('That is not your product')
-            }
+        const { prod_name, prod_price, prod_stock, prod_category, prod_published } = req.body
+        if (!prod_name) {
+            getProd_name = getProduct.dataValues.prod_name
         }
         else {
-            res.status(404).send('Product does not exists')
+            getProd_name = prod_name
         }
+        if (!prod_price) {
+            getProd_price = getProduct.dataValues.prod_price
+        }
+        else {
+            getProd_price = prod_price
+        }
+        if (!prod_stock) {
+            getProd_stock = getProduct.dataValues.prod_stock
+        }
+        else {
+            getProd_stock = prod_stock
+        }
+        if (!prod_category) {
+            getProd_category = getProduct.dataValues.prod_category
+        }
+        else {
+            getProd_category = prod_category
+        }
+        if (!prod_published) {
+            getProd_published = getProduct.dataValues.prod_published
+        }
+        else {
+            getProd_published = prod_published
+        }
+        await product.update({
+            prod_name: getProd_name,
+            prod_price: getProd_price,
+            prod_stock: getProd_stock,
+            prod_category: getProd_category,
+            prod_published: getProd_published
+        }, {
+            where: { id: product_id }
+        })
+        res.status(200).json({
+            "Id": product_id,
+            "Product name": getProd_name,
+            "Product price": getProd_price,
+            "Product stock": getProd_stock,
+            "Product category": getProd_category,
+            "Product published": getProd_published
+        })
     }
     catch (error) {
         res.status(500).json({ error })
@@ -122,7 +140,6 @@ const updateProductOrAdmin = async (req, res, next) => {
 }
 
 // Delete an own product
-// Check admin
 const deleteProduct = async (req, res) => {
     try {
         const id = req.params.id
@@ -145,7 +162,7 @@ module.exports = {
     getProductById,
     getProdByCategory,
     getProductByUserId,
-    saveProductOrAdmin,
-    updateProductOrAdmin,
+    saveProduct,
+    updateProduct,
     deleteProduct
 }

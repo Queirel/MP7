@@ -20,15 +20,14 @@ const isAdmin = (req, res, next) => {
 }
 
 // Its your product
-const isUserProductOrAdmin = async (req, res, next) => {
+const isUserProduct = async (req, res, next) => {
     try {
         const product_id = req.params.id
         const user_id = req.user.id
         const getProduct = await product.findOne({ where: { id: product_id } })
-        const getUser = await user.findOne({ where: { id: user_id } })
         if (getProduct) {
             const prod_user_id = getProduct.prod_user_id
-            if (user_id == prod_user_id || getUser.user_role == "admin") {
+            if (user_id == prod_user_id) {
                 next()
             }
             else {
@@ -44,13 +43,9 @@ const isUserProductOrAdmin = async (req, res, next) => {
     }
 }
 
-// Its your transaction or u r admin
-const isUserTransactionOrAdmin = async (req, res, next) => {
+// Its your transaction
+const isUserTransaction = async (req, res, next) => {
     try {
-        if (req.user.user_role == 'admin') {
-            next()
-        }
-        else {
             const transaction_id = req.params.id
             const user_id = req.user.id
             const getTransaction = await transaction.findOne({ where: { id: transaction_id } })
@@ -67,7 +62,6 @@ const isUserTransactionOrAdmin = async (req, res, next) => {
                 res.status(401).json({ forbidden: 'you do not have access' })
             }
         }
-    }
     catch (error) {
         res.status(500).json({ error })
     }
@@ -75,6 +69,6 @@ const isUserTransactionOrAdmin = async (req, res, next) => {
 
 module.exports = {
     isAdmin,
-    isUserProductOrAdmin,
-    isUserTransactionOrAdmin,
+    isUserProduct,
+    isUserTransaction,
 }

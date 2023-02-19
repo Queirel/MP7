@@ -34,10 +34,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min: {
-          args: 1,
-          msg: "must be more than 0"
-        },
+        validate: {
+          len: [0,1000000],
+        }
       },
       defaultValue: 1
     },
@@ -45,10 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min: {
-          args: 1,
-          msg: "there has to be at least 1"
-        }
+        len: [0,1000],
       }
     },
     prod_published: {

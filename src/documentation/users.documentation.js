@@ -63,7 +63,7 @@
  * @swagger
  * /users/{id}:
  *   get:
- *     description: To see the user name (Admin can also see full information of the user)
+ *     description: To get the user name
  *     summary: Get the user by id
  *     tags: [Users]
  *     parameters:
@@ -88,7 +88,6 @@
 *  put:
 *    description: To change information of the own user
 *    requestBody:
-*      required: true
 *      content:
 *        application/x-www-form-urlencoded:
 *          schema:
@@ -104,12 +103,6 @@
 *                type: integer
 *              user_birthdate: 
 *                type: date
-*            required:
-*              - user_name
-*              - user_realname
-*              - user_lastname
-*              - user_dni
-*              - user_birthdate
 *    summary: Update the own user
 *    tags: [Users]
 *    responses:
@@ -119,6 +112,38 @@
 *        description: You must be logged
 *      404:
 *        description: User does not exists
+*      500:
+*        description: Some error happened
+*/
+
+/**
+* @swagger
+* /users/pass/new:
+*  put:
+*    description: To change the own password
+*    requestBody:
+*      required: true
+*      content:
+*        application/x-www-form-urlencoded:
+*          schema:
+*            type: object
+*            properties:
+*              oldPassword:     
+*                type: string
+*              newPassword:  
+*                type: string
+*            required:
+*              - oldPassword
+*              - newPassword
+*    summary: Update the own password
+*    tags: [Users]
+*    responses:
+*      200:
+*        description: Password has been changed
+*      403:
+*        description: You must be logged
+*      404:
+*        description: You must fill the fields // New password cannot be the same as the old one // Incorrect password
 *      500:
 *        description: Some error happened
 */
@@ -140,3 +165,4 @@
 *       500:
 *         description: Some error happened
 */
+

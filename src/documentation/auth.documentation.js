@@ -41,7 +41,7 @@
 * @swagger
 * /sign/up:
 *  post:
-*    description: Create a new user (Admin can grant a role)
+*    description: Create a new user
 *    requestBody:
 *      required: true
 *      content:
@@ -61,9 +61,6 @@
 *                type: integer
 *              user_birthdate: 
 *                type: date
-*              user_role: 
-*                type: enum
-*                description: Admin only
 *            required:
 *              - user_name
 *              - user_password
