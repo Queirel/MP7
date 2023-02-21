@@ -34,17 +34,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        validate: {
           len: [0,1000000],
-        }
-      },
+        },
+   
       defaultValue: 1
     },
     prod_stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        len: [0,1000],
+        len: [0,1000]
       }
     },
     prod_published: {

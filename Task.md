@@ -168,3 +168,6 @@ Infrastructure
 
 `Mirate unos videos de SCRUM` ✅
 `Segui con Swagger` ✅
+
+
+logs sequelize

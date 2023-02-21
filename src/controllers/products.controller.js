@@ -29,6 +29,7 @@ const getProductById = async (req, res) => {
 
 const getProdByCategory = async (req, res) => {
     try {
+        // TODO: Controlar que la categoria exista
         const { limit, offset } = req.body
         const prod_category = req.params.category
         const getProduct = await product.findAll({ where: { prod_category }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
@@ -66,17 +67,32 @@ const saveProduct = async (req, res) => {
     try {
         const user_id = req.user.id
         const { prod_name, prod_price, prod_stock, prod_category } = req.body
-        const saveProduct = await product.create({
-            prod_name,
-            prod_user_id: user_id,
-            prod_price,
-            prod_stock,
-            prod_category
-        })
-        res.status(200).json(saveProduct)
+        if (prod_stock <= 0) {
+            res.status(400).json({ "Error": "Stock must be more than 0" })
+            brake
+        }
+        else if (prod_stock > 1000) {
+            res.status(400).json({ "Error": "Stock must be less than 1001" })
+        }
+        else if (isNaN(prod_stock)) {
+            res.status(400).json({ "Error": "Stock must be a number" })
+        }
+        else {
+            const saveProduct = await product.create({
+                prod_name,
+                prod_user_id: user_id,
+                prod_price,
+                prod_stock,
+                prod_category
+            })
+            res.status(200).json(saveProduct)
+        }
     }
-    catch (error) {
-        res.status(500).json({ error })
+    catch (err) {
+        res.status(500).json({"Error":"An unexpected error occurred. please try again later"})
+        console.log(err.message)
+        // return res.status(500).render('errors/500', err.message);
+
     }
 }
 
