@@ -30,7 +30,7 @@
  *              description: The document number of the user
  *          user_birthdate:
  *              type: date
- *              description: The birthdate of the user
+ *              description: The user birthdate
  *          user_password:
  *              type: string
  *              description: The account password
@@ -79,7 +79,7 @@
  *       404:
  *         description: User does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -113,7 +113,7 @@
 *      404:
 *        description: User does not exists
 *      500:
-*        description: Some error happened
+*        description: An unexpected error occurred. please try again later
 */
 
 /**
@@ -145,7 +145,7 @@
 *      404:
 *        description: You must fill the fields // New password cannot be the same as the old one // Incorrect password
 *      500:
-*        description: Some error happened
+*        description: An unexpected error occurred. please try again later
 */
 
 /**
@@ -163,6 +163,6 @@
 *       404:
 *         description: The user was not found
 *       500:
-*         description: Some error happened
+*         description: An unexpected error occurred. please try again later
 */
 

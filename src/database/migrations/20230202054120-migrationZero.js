@@ -19,17 +19,10 @@ module.exports = {
           type: Sequelize.INTEGER,
           unique: true,
         },
-
         user_name: {
           type: Sequelize.STRING,
           allowNull: false,
           unique: true,
-          validate: {
-            len: {
-              args: [2, 255],
-              msg: "User name lenght must be between 2 and 255 characters"
-            }
-          }
         },
         user_role: {
           type: Sequelize.ENUM('admin', 'user'),
@@ -39,10 +32,6 @@ module.exports = {
         user_password: {
           type: Sequelize.STRING,
           allowNull: false,
-          len: {
-            args: [2, 255],
-            msg: "Password must be between 2 and 255 characters"
-          }
         },
         createdAt: {
           allowNull: false,
@@ -67,13 +56,6 @@ module.exports = {
         prod_name: {
           type: Sequelize.STRING,
           allowNull: false,
-          validate: {
-            isAlpha: {
-              args: true,
-              msg: "must be only letters"
-            }
-          },
-          defaultValue: 1
         },
         prod_user_id: {
           type: Sequelize.INTEGER,
@@ -86,26 +68,14 @@ module.exports = {
         prod_price: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          validate: {
-            min: {
-              args: 1,
-              msg: "must be more than 0"
-            },
-          },
           defaultValue: 1
         },
         prod_stock: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          validate: {
-            min: {
-              args: 1,
-              msg: "there has to be at least 1"
-            }
-          }
         },
         prod_category: {
-          type: Sequelize.ENUM('electronics', 'toys', 'tools', 'fashion'),
+          type: Sequelize.ENUM('agro','fashion','food','home','tecnology', 'tools', 'toys'),
           allowNull: false
         },
         createdAt: {
@@ -147,13 +117,6 @@ module.exports = {
         trans_prod_quantity: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          validate: {
-            min: {
-              args: 1,
-              msg: "must be more than 0"
-            },
-            max: 200,
-          },
           defaultValue: 1
         },
         trans_cancel: {
@@ -169,7 +132,6 @@ module.exports = {
           type: Sequelize.DATE
         }
       })
-
     ])
   },
 

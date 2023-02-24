@@ -34,7 +34,7 @@
  *       404:
  *         description: Username or password incorrect
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -93,5 +93,5 @@
 *      403:
 *        description: You are already logged
 *      500:
-*        description: Some error happened
+*        description: An unexpected error occurred. please try again later
 */

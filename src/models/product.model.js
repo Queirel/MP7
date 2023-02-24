@@ -18,12 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     prod_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlpha: {
-          args: true,
-          msg: "must be only letters"
-        }
-      },
       defaultValue: 1
     },
     prod_user_id: {
@@ -33,18 +27,11 @@ module.exports = (sequelize, DataTypes) => {
     prod_price: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-          len: [0,1000000],
-        },
-   
       defaultValue: 1
     },
     prod_stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-        len: [0,1000]
-      }
     },
     prod_published: {
       type: DataTypes.BOOLEAN,
@@ -52,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: true
     },
     prod_category: {
-      type: DataTypes.ENUM('electronics', 'toys', 'tools', 'fashion'),
+      type: DataTypes.ENUM('agro','fashion','food','home','tecnology', 'tools', 'toys'),
       allowNull: false
     }
   }, {

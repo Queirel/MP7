@@ -34,6 +34,7 @@
  *           description: If the product is published
  *         prod_category:
  *           type: string
+ *           enum: [agro,fashion,food,home,tecnology,tools,toys]
  *           description: The category of the product
  *         createdAt:
  *           type: date
@@ -73,7 +74,7 @@
  *       404:
  *         description: There are no products
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -96,7 +97,7 @@
  *       404:
  *         description: Product does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -110,7 +111,8 @@
  *       - in: path
  *         name: category
  *         schema:
- *           type: string
+ *                type: string
+ *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *         required: true
  *         description: The product category
  *     responses:
@@ -119,7 +121,7 @@
  *       404:
  *         description: Product does not exists for the category
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -142,7 +144,7 @@
  *       404:
  *         description: There is no products from the user
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -165,6 +167,7 @@
  *                type: integer
  *              prod_category: 
  *                type: string
+ *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *            required:
  *              - prod_name
  *              - prod_price
@@ -180,7 +183,7 @@
  *      404:
  *        description: Some error happened
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -209,6 +212,7 @@
  *                type: integer
  *              prod_category: 
  *                type: string
+ *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *              prod_published:  
  *                type: boolean
  *    summary: Update a product by id
@@ -221,7 +225,7 @@
  *      404:
  *        description: That's not your product
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -246,5 +250,5 @@
  *       404:
  *         description: That's not your product
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */

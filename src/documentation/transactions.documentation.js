@@ -64,7 +64,7 @@
  *       404:
  *         description: There are no transactions
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 
@@ -88,7 +88,7 @@
  *       401:
  *         description: You do not have access
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -118,7 +118,7 @@
  *      403:
  *        description: You must be logged
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -143,5 +143,5 @@
  *      404:
  *        description: You dont have access
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */

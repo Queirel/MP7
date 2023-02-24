@@ -18,20 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        len: {
-          args: [2, 255],
-          msg: "User name lenght must be between 2 and 255 characters"
-        }
-      }
     },
     user_password: {
       type: DataTypes.STRING,
-      allowNull: false,
-      len: {
-        args: [2, 255],
-        msg: "Password must be between 2 and 255 characters"
-      }
     },
     user_role: {
       type: DataTypes.ENUM('admin', 'user'),
@@ -41,22 +30,18 @@ module.exports = (sequelize, DataTypes) => {
     user_realname: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'user'
     },
     user_lastname: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'user'
     },
     user_birthdate: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'user'
     },
     user_dni: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 'user'
     }
   }, {
     sequelize,

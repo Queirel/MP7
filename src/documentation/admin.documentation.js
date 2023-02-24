@@ -44,7 +44,7 @@
  *       404:
  *         description: User does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -60,7 +60,7 @@
  *       401:
  *         description: You dont have access
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -76,7 +76,7 @@
  *       401:
  *         description: You dont have access
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -112,7 +112,7 @@
  *      403:
  *        description: You must be logged
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -135,6 +135,7 @@
  *                type: integer
  *              prod_category: 
  *                type: string
+ *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *              prod_user_id: 
  *                type: integer
  *              prod_published: 
@@ -156,7 +157,7 @@
  *      404:
  *        description: Some error happened
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -183,6 +184,7 @@
  *                type: integer
  *              prod_category: 
  *                type: string
+ *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *              prod_published:  
  *                type: boolean
  *              prod_user_id:  
@@ -197,7 +199,7 @@
  *      404:
  *        description: That's not your product
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -222,7 +224,7 @@
  *       404:
  *         description: Transaction does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -263,7 +265,7 @@
 *      404:
 *        description: User does not exists
 *      500:
-*        description: Some error happened
+*        description: An unexpected error occurred. please try again later
 */
 
 /**
@@ -288,7 +290,7 @@
  *       404:
  *         description: User does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -313,7 +315,7 @@
  *       404:
  *         description: Product does not exists
  *       500:
- *         description: Some error happened
+ *         description: An unexpected error occurred. please try again later
  */
 
 /**
@@ -341,7 +343,8 @@
 *              user_birthdate: 
 *                type: date
 *              user_role: 
-*                type: enum
+*                type: string
+*                enum: [user, admin]
 *            required:
 *              - user_name
 *              - user_password
@@ -356,7 +359,7 @@
 *      200:
 *        description: The user was created
 *      500:
-*        description: Some error happened
+*        description: An unexpected error occurred. please try again later
 */
 
 /**
@@ -391,5 +394,5 @@
  *      404:
  *        description: You dont have access
  *      500:
- *        description: Some error happened
+ *        description: An unexpected error occurred. please try again later
  */

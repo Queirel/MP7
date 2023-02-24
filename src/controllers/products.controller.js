@@ -1,5 +1,7 @@
 const { product } = require("../models");
 
+
+// Get a products
 const getProducts = async (req, res) => {
     try {
         const { offset, limit } = req.body
@@ -7,94 +9,157 @@ const getProducts = async (req, res) => {
         res.status(200).json({ "Productos": getProds })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
+
+// Get a product by id
 const getProductById = async (req, res) => {
     try {
         const id = req.params.id
+
+        // Product id conditions
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "Product id must be an integer" })
+        }
+
         const getProduct = await product.findOne({ where: { id }, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (getProduct) {
-            res.status(200).json(getProduct)
+        if (!getProduct) {
+            return res.status(400).json({ "Error": "Product does not exist" })
         }
-        else {
-            res.status(404).send('Product does not exist')
-        }
+        res.status(200).json({ "Product": getProduct })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
+
+// Get a product by category
 const getProdByCategory = async (req, res) => {
     try {
-        // TODO: Controlar que la categoria exista
         const { limit, offset } = req.body
         const prod_category = req.params.category
+        console.log(prod_category)
+
+        // Category conditions
+        const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
+        if (!categorys.includes(prod_category)) {
+            return res.status(400).json({ "Error": "The category does not exist" })
+        }
+
         const getProduct = await product.findAll({ where: { prod_category }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (!getProduct.length == 0) {
-            res.status(200).json(getProduct)
+        if (getProduct.length == 0) {
+            return res.status(400).json({ "Error": 'There is no products from that category' })
         }
-        else {
-            res.status(404).send('There is no products from that category')
-        }
+
+        res.status(200).json({ "Product": getProduct })
+
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
+
+// Get a product by user id
 const getProductByUserId = async (req, res) => {
     try {
         const prod_user_id = req.params.id
         const { limit, offset } = req.body
+
+        // User id conditions
+        if (/[^0-9]/.test(prod_user_id)) {
+            return res.status(400).json({ "Error": "User id must be an integer" })
+        }
+
         const getProducts = await product.findAll({ where: { prod_user_id }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (!getProducts.length == 0) {
-            res.status(200).json(getProducts)
+
+        if (getProducts.length == 0) {
+            res.status(400).json({ "Error": "There is no products from the user" })
         }
-        else {
-            res.status(404).send('There is no products from the user')
-        }
+
+        res.status(200).json({ "Products": getProducts })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
-// Save a product
+
+// Create a product
 const saveProduct = async (req, res) => {
     try {
         const user_id = req.user.id
         const { prod_name, prod_price, prod_stock, prod_category } = req.body
-        if (prod_stock <= 0) {
-            res.status(400).json({ "Error": "Stock must be more than 0" })
-            brake
-        }
-        else if (prod_stock > 1000) {
-            res.status(400).json({ "Error": "Stock must be less than 1001" })
-        }
-        else if (isNaN(prod_stock)) {
-            res.status(400).json({ "Error": "Stock must be a number" })
-        }
-        else {
-            const saveProduct = await product.create({
-                prod_name,
-                prod_user_id: user_id,
-                prod_price,
-                prod_stock,
-                prod_category
-            })
-            res.status(200).json(saveProduct)
-        }
-    }
-    catch (err) {
-        res.status(500).json({"Error":"An unexpected error occurred. please try again later"})
-        console.log(err.message)
-        // return res.status(500).render('errors/500', err.message);
 
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Stock must be an integer" })
+        }
+        if (prod_stock <= 0) {
+            return res.status(400).json({ "Error": "Stock must be more than 0" })
+        }
+        if (prod_stock > 1000) {
+            return res.status(400).json({ "Error": "Stock must be less than 1000" })
+        }
+
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Price must be an integer" })
+        }
+        if (prod_price <= 0) {
+            return res.status(400).json({ "Error": "Price must be more than 0" })
+        }
+        if (prod_price > 1000) {
+            return res.status(400).json({ "Error": "Price must be less than 100000" })
+        }
+
+        // Name conditions
+        if (/[^a-zA-Z]/.test(prod_name)) {
+            return res.status(400).json({ "Error": "Product name must be only letters" })
+        }
+        if (prod_name.length > 15) {
+            return res.status(400).json({ "Error": "Product name must be less than 15 characters" })
+        }
+        if (prod_name.length < 3) {
+            return res.status(400).json({ "Error": "Product name must be at least 3 letters" })
+        }
+
+
+        // Category conditions
+        const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
+        if (!categorys.includes(prod_category)) {
+            return res.status(400).json({ "Error": "The category does not exist" })
+        }
+
+        //Save the product
+        const saveProduct = await product.create({
+            prod_name,
+            prod_user_id: user_id,
+            prod_price,
+            prod_stock,
+            prod_category
+        })
+        res.status(200).json({
+            "Product": prod_name,
+            "User": user_id,
+            "Price": prod_price,
+            "Stock": prod_stock,
+            "Category": prod_category
+        })
+    }
+    catch (error) {
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
+
 
 // Update an own product
 const updateProduct = async (req, res) => {
@@ -102,6 +167,47 @@ const updateProduct = async (req, res) => {
         const product_id = req.params.id
         const getProduct = await product.findOne({ where: { id: product_id } })
         const { prod_name, prod_price, prod_stock, prod_category, prod_published } = req.body
+
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Stock must be an integer" })
+        }
+        if (prod_stock <= 0) {
+            return res.status(400).json({ "Error": "Stock must be more than 0" })
+        }
+        if (prod_stock > 1000) {
+            return res.status(400).json({ "Error": "Stock must be less than 1000" })
+        }
+
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Price must be an integer" })
+        }
+        if (prod_price <= 0) {
+            return res.status(400).json({ "Error": "Price must be more than 0" })
+        }
+        if (prod_price > 1000) {
+            return res.status(400).json({ "Error": "Price must be less than 100000" })
+        }
+
+        // Name conditions
+        if (/[^a-zA-Z]/.test(prod_name)) {
+            return res.status(400).json({ "Error": "Product name must be only letters" })
+        }
+        if (prod_name.length > 15) {
+            return res.status(400).json({ "Error": "Product name must be less than 15 characters" })
+        }
+        if (prod_name.length < 3) {
+            return res.status(400).json({ "Error": "Product name must be at least 3 letters" })
+        }
+
+        // Category conditions
+        const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
+        if (!categorys.includes(prod_category)) {
+            return res.status(400).json({ "Error": "The category does not exist" })
+        }
+
+        // If empty field
         if (!prod_name) {
             getProd_name = getProduct.dataValues.prod_name
         }
@@ -132,6 +238,8 @@ const updateProduct = async (req, res) => {
         else {
             getProd_published = prod_published
         }
+
+        // Update
         await product.update({
             prod_name: getProd_name,
             prod_price: getProd_price,
@@ -141,6 +249,8 @@ const updateProduct = async (req, res) => {
         }, {
             where: { id: product_id }
         })
+
+        // response
         res.status(200).json({
             "Id": product_id,
             "Product name": getProd_name,
@@ -151,25 +261,33 @@ const updateProduct = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
-// Delete an own product
+
+// Delete an own product by id
 const deleteProduct = async (req, res) => {
     try {
         const id = req.params.id
+
+        // Product id conditions
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "Product id must be an integer" })
+        }
+
         const getProduct = await product.findOne({ where: { id } })
-        if (getProduct) {
-            await product.destroy({ where: { id } })
-            res.status(200).json(`Product ${id} deleted`)
+        if (!getProduct) {
+            return res.status(400).json({ "Error": "Product does not exists" })
         }
-        else {
-            res.status(404).send('Product does not exists')
-        }
+
+        await product.destroy({ where: { id } })
+        res.status(200).json(`Product ${id} deleted`)
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 

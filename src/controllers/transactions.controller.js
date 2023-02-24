@@ -10,7 +10,8 @@ const getOwnTransactions = async (req, res) => {
         res.status(200).json(getTransactions)
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
@@ -18,16 +19,20 @@ const getOwnTransactions = async (req, res) => {
 const getTransactionById = async (req, res) => {
     try {
         const id = req.params.id
+
+        // Transaction id conditions
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "User id must be an integer" })
+        }
         const getTransaction = await transaction.findOne({ where: { id } })
-        if (getTransaction) {
-            res.status(200).json(getTransaction)
+        if (!getTransaction) {
+            return res.status(404).send('Transaction does not exists')
         }
-        else {
-            res.status(404).send('Transaction does not exists')
-        }
+        res.status(200).json(getTransaction)
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
@@ -35,68 +40,74 @@ const getTransactionById = async (req, res) => {
 const createTransactionAndStockControl = async (req, res) => {
     try {
         const { trans_prod_id, trans_prod_quantity } = req.body
+        if (/[^0-9]/.test(trans_prod_quantity)) {
+            return res.status(400).json({ "Error": "Quantity must be an integer" })
+        }
+        if (/[^0-9]/.test(trans_prod_id)) {
+            return res.status(400).json({ "Error": "Product id must be an integer" })
+        }
+        if (trans_prod_quantity < 1) {
+            return res.status(400).json({ "Error": "Quantity must be more than 0" })
+        }
+        if (trans_prod_quantity >= 100) {
+            return res.status(400).json({ "Error": "Quantity must be less than 100" })
+        }
         const user_id = req.user.id
         const getProduct = await product.findOne({ where: { id: trans_prod_id } })
+        if (!getProduct) {
+            return res.status(401).json({ "Error": 'Product does not exists' })
+        }
         const prod_user_id = getProduct.prod_user_id
         if (user_id == prod_user_id) {
-            res.status(401).json('You cant buy your own product')
+            return res.status(401).json({ "Error": 'You cant buy your own product' })
         }
-        else {
-            if (!getProduct.dataValues.prod_published) {
-                res.status(400).json({ "Error": "You cant buy a paused product" })
-            }
-            else {
-                if (trans_prod_quantity < 1) {
-                    res.status(404).json({ "Error": "Quantity must be more than 0" })
-                }
-                else {
-                    if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
-                        res.status(404).json({ "Error": "Quantity exceeds stock" })
-                    }
-                    else if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
-                        const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity
-                        const getTransaction = await transaction.create({
-                            trans_prod_id,
-                            trans_prod_quantity,
-                            trans_buy_user_id: user_id,
-                        })
-                        await product.update({
-                            prod_published: false,
-                            prod_stock: NewStock
-                        }, { where: { id: trans_prod_id } })
-                        res.status(200).json({
-                            "Message": "Out of stock, product paused",
-                            "Transaction id": getTransaction.id,
-                            "User": user_id,
-                            "Product": trans_prod_id,
-                            "Quantity": trans_prod_quantity
-                        })
-                    }
-                    else {
-                        const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity
-                        console.log(NewStock)
-                        const getTransaction = await transaction.create({
-                            trans_prod_id,
-                            trans_prod_quantity,
-                            trans_buy_user_id: user_id,
-                        })
-                        await product.update({
-                            prod_stock: NewStock
-                        }, { where: { id: trans_prod_id } })
-                        res.status(200).json({
-                            "Remaining product quantity": NewStock,
-                            "Transaction id": getTransaction.id,
-                            "User": user_id,
-                            "Product": trans_prod_id,
-                            "Quantity": trans_prod_quantity
-                        })
-                    }
-                }
-            }
+        if (!getProduct.dataValues.prod_published) {
+            return res.status(400).json({ "Error": "You cant buy a paused product" })
         }
+
+        if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
+            return res.status(400).json({ "Error": "Quantity exceeds stock" })
+        }
+        if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
+            const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity
+            const getTransaction = await transaction.create({
+                trans_prod_id,
+                trans_prod_quantity,
+                trans_buy_user_id: user_id,
+            })
+            await product.update({
+                prod_published: false,
+                prod_stock: NewStock
+            }, { where: { id: trans_prod_id } })
+            return res.status(200).json({
+                "Message": "Out of stock, product paused",
+                "Transaction id": getTransaction.id,
+                "User": user_id,
+                "Product": trans_prod_id,
+                "Quantity": trans_prod_quantity
+            })
+        }
+        const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity
+        console.log(NewStock)
+        const getTransaction = await transaction.create({
+            trans_prod_id,
+            trans_prod_quantity,
+            trans_buy_user_id: user_id,
+        })
+        await product.update({
+            prod_stock: NewStock
+        }, { where: { id: trans_prod_id } })
+        res.status(200).json({
+            "Remaining product quantity": NewStock,
+            "Transaction id": getTransaction.id,
+            "User": user_id,
+            "Product": trans_prod_id,
+            "Quantity": trans_prod_quantity
+        })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
@@ -104,26 +115,25 @@ const createTransactionAndStockControl = async (req, res) => {
 const cancelTransactionById = async (req, res) => {
     try {
         const id = req.params.id
-        const getTransaction = await transaction.findOne({ where: { id } })
-        if (getTransaction) {
-            if (getTransaction.trans_cancel) {
-                res.status(200).json(`Transaction ${id} is already cancelled`)
-            }
-            else {
-                await transaction.update({
-                    trans_cancel: true,
-                }, {
-                    where: { id }
-                })
-                res.status(200).json(`Transaction ${id} cancelled`)
-            }
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "User id must be an integer" })
         }
+        const getTransaction = await transaction.findOne({ where: { id } })
+        if (!getTransaction.trans_cancel) {
+            await transaction.update({
+                trans_cancel: true,
+            }, {
+                where: { id }
+            })
+            return res.status(200).json({ "Message": `Transaction ${id} cancelled` })
+        }
+        res.status(200).json({ "Message": `Transaction ${id} is already cancelled` })
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
-
 
 module.exports = {
     getTransactionById,
