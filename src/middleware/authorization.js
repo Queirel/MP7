@@ -11,11 +11,12 @@ const isAdmin = (req, res, next) => {
             next()
         }
         else {
-            res.status(401).json({ forbidden: 'you dont have access' })
+            res.status(401).json({ 'Forbidden': 'you dont have access' })
         }
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
@@ -35,11 +36,12 @@ const isUserProduct = async (req, res, next) => {
             }
         }
         else {
-            res.status(404).json({ forbidden: 'the product does not exists' })
+            res.status(400).json({ Forbidden: 'the product does not exists' })
         }
     }
     catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
     }
 }
 
@@ -62,9 +64,10 @@ const isUserTransaction = async (req, res, next) => {
                 res.status(401).json({ forbidden: 'you do not have access' })
             }
         }
-    catch (error) {
-        res.status(500).json({ error })
-    }
+        catch (error) {
+            res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+            console.log(error.message)
+        }
 }
 
 module.exports = {

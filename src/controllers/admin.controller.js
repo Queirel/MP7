@@ -12,6 +12,9 @@ const getUserByIdAdmin = async (req, res) => {
             return res.status(400).json({ "Error": "User id must be an integer" })
         }
         const getUser = await user.findOne({ where: { id } })
+        if (!getUser) {
+            return res.status(400).json({ "Error": "User does not exists" })
+        }
         res.status(200).json({ "User": getUser })
     }
     catch (error) {
@@ -46,7 +49,7 @@ const getAllTransactionsAdmin = async (req, res) => {
         if (getTransactions.length == 0) {
             return res.status(400).json({ "Error": "There are no transactions" })
         }
-        res.status(200).json(getTransactions)
+        res.status(200).json({ "Transactions": getTransactions })
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
@@ -58,7 +61,7 @@ const getAllTransactionsAdmin = async (req, res) => {
 const saveTransactionAdminStockControl = async (req, res) => {
     try {
         const { trans_prod_id, trans_prod_quantity, trans_cancel, trans_buy_user_id } = req.body
-        
+
         if (/[^0-9]/.test(trans_prod_quantity)) {
             return res.status(400).json({ "Error": "Quantity must be an integer" })
         }
@@ -76,7 +79,7 @@ const saveTransactionAdminStockControl = async (req, res) => {
         }
         const getUser = await user.findOne({ where: { id: trans_buy_user_id } })
         if (!getUser) {
-            return res.status(400).json({ "Error": 'Product does not exists' })
+            return res.status(400).json({ "Error": 'User does not exists' })
         }
         const getProduct = await product.findOne({ where: { id: trans_prod_id } })
         if (!getProduct) {
@@ -92,8 +95,8 @@ const saveTransactionAdminStockControl = async (req, res) => {
         if (!getProduct.dataValues.prod_published) {
             return res.status(400).json({ "Error": "You cant buy a paused product" })
         }
-        if (typeof trans_cancel == "boolean") {
-            return res.status(400).json({ "Error": "transaction cancel must be a boolean" }) 
+        if (!typeof trans_cancel == "boolean") {
+            return res.status(400).json({ "Error": "transaction cancel must be a boolean" })
         }
         if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
             const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity
@@ -136,6 +139,60 @@ const saveTransactionAdminStockControl = async (req, res) => {
 const saveProductAdmin = async (req, res) => {
     try {
         const { prod_name, prod_price, prod_stock, prod_category, prod_published, prod_user_id } = req.body
+
+        // published conditions
+        if (!typeof prod_published == "boolean") {
+            return res.status(400).json({ "Error": "published must be a boolean" })
+        }
+
+        // User id conditions
+        if (/[^0-9]/.test(prod_user_id)) {
+            return res.status(400).json({ "Error": "user id must be an integer" })
+        }
+        const getUser = await user.findOne({ where: { id: prod_user_id } })
+        if (!getUser) {
+            return res.status(400).json({ "Error": 'User does not exists' })
+        }
+
+        // Stock conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Stock must be an integer" })
+        }
+        if (prod_stock <= 0) {
+            return res.status(400).json({ "Error": "Stock must be more than 0" })
+        }
+        if (prod_stock > 1000) {
+            return res.status(400).json({ "Error": "Stock must be less than 1000" })
+        }
+
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Price must be an integer" })
+        }
+        if (prod_price <= 0) {
+            return res.status(400).json({ "Error": "Price must be more than 0" })
+        }
+        if (prod_price > 1000) {
+            return res.status(400).json({ "Error": "Price must be less than 100000" })
+        }
+
+        // Name conditions
+        if (/[^a-zA-Z]/.test(prod_name)) {
+            return res.status(400).json({ "Error": "Product name must be only letters" })
+        }
+        if (prod_name.length >= 15) {
+            return res.status(400).json({ "Error": "Product name must be less than 15 characters" })
+        }
+        if (prod_name.length < 3) {
+            return res.status(400).json({ "Error": "Product name must be at least 3 letters" })
+        }
+
+        // Category conditions
+        const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
+        if (!categorys.includes(prod_category)) {
+            return res.status(400).json({ "Error": "The category does not exists" })
+        }
+
         const saveProduct = await product.create({
             prod_name,
             prod_user_id,
@@ -144,7 +201,7 @@ const saveProductAdmin = async (req, res) => {
             prod_category,
             prod_published
         })
-        res.status(200).json(saveProduct)
+        res.status(200).json({ "Product": saveProduct })
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
@@ -152,48 +209,30 @@ const saveProductAdmin = async (req, res) => {
     }
 }
 
-// Update any product
+
+// -----------------------Update any product
 const updateProductAdmin = async (req, res) => {
     try {
         const product_id = req.params.id
+        if (/[^0-9]/.test(product_id)) {
+            return res.status(400).json({ "Error": "Product id must be an integer" })
+        }
         const getProduct = await product.findOne({ where: { id: product_id } })
+        if (!getProduct) {
+            return res.status(400).json({ "Error": "Product does not exists" })
+        }
         const {
             prod_name,
             prod_price,
-            // prod_stock, 
             prod_user_id,
             prod_category,
             prod_published
+            // prod_stock, 
         } = req.body
-        if (!prod_name) {
-            getProd_name = getProduct.dataValues.prod_name
-        }
-        else {
-            getProd_name = prod_name
-        }
-        if (!prod_price) {
-            getProd_price = getProduct.dataValues.prod_price
-        }
-        else {
-            getProd_price = prod_price
-        }
-        if (!prod_user_id) {
-            getProd_user_id = getProduct.dataValues.prod_user_id
-        }
-        else {
-            getProd_user_id = prod_user_id
-        }
-        // if (!prod_stock) {
-        //     getProd_stock = getProduct.dataValues.prod_stock
-        // }
-        // else {
-        //     getProd_stock = prod_stock
-        // }
-        if (!prod_category) {
-            getProd_category = getProduct.dataValues.prod_category
-        }
-        else {
-            getProd_category = prod_category
+
+        // published conditions
+        if (!typeof prod_published == "boolean") {
+            return res.status(400).json({ "Error": "published must be a boolean" })
         }
         if (!prod_published) {
             getProd_published = getProduct.dataValues.prod_published
@@ -201,13 +240,90 @@ const updateProductAdmin = async (req, res) => {
         else {
             getProd_published = prod_published
         }
+
+        // User id conditions
+        const getUser = await user.findOne({ where: { id: prod_user_id } })
+        if (!getUser) {
+            return res.status(400).json({ "Error": 'User does not exists' })
+        }
+        if (!prod_user_id) {
+            getProd_user_id = getProduct.dataValues.prod_user_id
+        }
+        else {
+            getProd_user_id = prod_user_id
+        }
+
+        // // Stock conditions
+        // if (/[^0-9]/.test(prod_stock)) {
+        //     return res.status(400).json({ "Error": "Stock must be an integer" })
+        // }
+        // if (prod_stock <= 0) {
+        //     return res.status(400).json({ "Error": "Stock must be more than 0" })
+        // }
+        // if (prod_stock > 1000) {
+        //     return res.status(400).json({ "Error": "Stock must be less than 1000" })
+        // }
+
+        // Price conditions
+        if (/[^0-9]/.test(prod_stock)) {
+            return res.status(400).json({ "Error": "Price must be an integer" })
+        }
+        if (prod_price <= 0) {
+            return res.status(400).json({ "Error": "Price must be more than 0" })
+        }
+        if (prod_price > 1000) {
+            return res.status(400).json({ "Error": "Price must be less than 100000" })
+        }
+        if (!prod_price) {
+            getProd_price = getProduct.dataValues.prod_price
+        }
+        else {
+            getProd_price = prod_price
+        }
+
+        // Name conditions
+        if (/[^a-zA-Z]/.test(prod_name)) {
+            return res.status(400).json({ "Error": "Product name must be only letters" })
+        }
+        if (prod_name.length >= 15) {
+            return res.status(400).json({ "Error": "Product name must be less than 15 characters" })
+        }
+        if (prod_name.length < 3) {
+            return res.status(400).json({ "Error": "Product name must be at least 3 letters" })
+        }
+        if (!prod_name) {
+            getProd_name = getProduct.dataValues.prod_name
+        }
+        else {
+            getProd_name = prod_name
+        }
+
+        // Category conditions
+        const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
+        if (!categorys.includes(prod_category)) {
+            return res.status(400).json({ "Error": "The category does not exist" })
+        }
+        if (!prod_category) {
+            getProd_category = getProduct.dataValues.prod_category
+        }
+        else {
+            getProd_category = prod_category
+        }
+
+        // if (!prod_stock) {
+        //     getProd_stock = getProduct.dataValues.prod_stock
+        // }
+        // else {
+        //     getProd_stock = prod_stock
+        // }
+
         await product.update({
             prod_name: getProd_name,
             prod_price: getProd_price,
-            // prod_stock: getProd_stock,
             prod_category: getProd_category,
             prod_user_id: getProd_user_id,
             prod_published: getProd_published
+            // prod_stock: getProd_stock,
         }, {
             where: { id: product_id }
         })
@@ -215,7 +331,7 @@ const updateProductAdmin = async (req, res) => {
             "Id": product_id,
             "Product name": getProd_name,
             "Product price": getProd_price,
-            "Product stock": getProd_stock,
+            "Product stock": getProduct.dataValues.prod_stock,
             "User owner": getProd_user_id,
             "Product category": getProd_category,
             "Product published": getProd_published
@@ -232,13 +348,14 @@ const updateProductAdmin = async (req, res) => {
 const deleteTransactionAdmin = async (req, res) => {
     try {
         const id = req.params.id
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "Transaction id must be an integer" })
+        }
         const getTransaction = await transaction.destroy({ where: { id } })
-        if (getTransaction) {
-            res.status(200).json(`Transaction ${id} deleted`)
+        if (!getTransaction) {
+            return res.status(400).json('Transaction does not exists')
         }
-        else {
-            res.status(404).json('Transaction does not exists')
-        }
+        res.status(200).json(`Transaction ${id} deleted`)
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
@@ -250,123 +367,197 @@ const deleteTransactionAdmin = async (req, res) => {
 const updateUserByIdAdmin = async (req, res) => {
     try {
         const id = req.params.id
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "User id must be an integer" })
+        }
         const getUser = await user.findOne({ where: { id } })
-        if (getUser) {
-            const { user_name, user_password, user_realname, user_lastname, user_dni, user_role, user_birthdate } = req.body
-            if (!user_name) {
-                getUser_name = getUser.dataValues.user_name
-            }
-            else {
-                getUser_name = user_name
-            }
-            if (!user_password) {
-                getUser_password = getUser.dataValues.user_password
-            }
-            else {
-                getUser_password = user_password
-            }
-            if (!user_realname) {
-                getUser_realname = getUser.dataValues.user_realname
-            }
-            else {
-                getUser_realname = user_realname
-            }
-            if (!user_lastname) {
-                getUser_lastname = getUser.dataValues.user_lastname
-            }
-            else {
-                getUser_lastname = user_lastname
-            }
-            if (!user_dni) {
-                getUser_dni = getUser.dataValues.user_dni
-            }
-            else {
-                getUser_dni = user_dni
-            }
-            if (!user_role) {
-                getUser_role = getUser.dataValues.user_role
-            }
-            else {
-                getUser_role = user_role
-            }
-            if (!user_birthdate) {
-                getUser_birthdate = getUser.dataValues.user_birthdate
-            }
-            else {
-                getUser_birthdate = user_birthdate
-            }
-            const passHash = await passwordHash(getUser_password)
-            await user.update({
-                user_name: getUser_name,
-                user_realname: getUser_realname,
-                user_lastname: getUser_lastname,
-                user_dni: getUser_dni,
-                user_birthdate: getUser_birthdate,
-                user_password: passHash,
-                user_role: getUser_role,
-            }, { where: { id } })
-            res.status(200).json({
-                id,
-                "User name": getUser_name,
-                "Name": getUser_realname,
-                "Lastname": getUser_lastname,
-                "DNI": getUser_dni,
-                "Role": getUser_role,
-                "Password": passHash,
-                "Birthdate": getUser_birthdate
-            })
+        if (!getUser) {
+            return res.status(400).json({ "Error": "User does not exists" })
+        }
+        const { user_name, user_password, user_realname, user_lastname, user_dni, user_role, user_birthdate } = req.body
+
+        // Username conditions
+        if (/[^a-zA-Z0-9]/.test(user_name)) {
+            return res.status(400).json({ "Error": "The username must be only letters and numbers" })
+        }
+        if (user_name.length >= 15) {
+            return res.status(400).json({ "Error": "The username must be less than 15 characters" })
+        }
+        if (user_name.length < 3) {
+            return res.status(400).json({ "Error": "The username must be at least 3 characters" })
+        }
+        if (!user_name) {
+            getUser_name = getUser.dataValues.user_name
         }
         else {
-            res.status(404).json({ "Error": "User does not exists" })
+            getUser_name = user_name
         }
+
+        // Name conditions
+        if (/[^a-zA-Z]/.test(user_realname)) {
+            return res.status(400).json({ "Error": "The name must be only letters" })
+        }
+        if (user_realname.length >= 15) {
+            return res.status(400).json({ "Error": "The name must be less than 15 characters" })
+        }
+        if (user_realname.length < 3) {
+            return res.status(400).json({ "Error": "The name must be at least 3 letters" })
+        }
+        if (!user_realname) {
+            getUser_realname = getUser.dataValues.user_realname
+        }
+        else {
+            getUser_realname = user_realname
+        }
+
+        // Lastname conditions
+        if (/[^a-zA-Z]/.test(user_lastname)) {
+            return res.status(400).json({ "Error": "The lastname must be only letters" })
+        }
+        if (user_lastname.length >= 15) {
+            return res.status(400).json({ "Error": "The lastname must be less than 15 characters" })
+        }
+        if (user_lastname.length < 2) {
+            return res.status(400).json({ "Error": "The lastname must be at least 2 letters" })
+        }
+        if (!user_lastname) {
+            getUser_lastname = getUser.dataValues.user_lastname
+        }
+        else {
+            getUser_lastname = user_lastname
+        }
+
+        // DNI conditions
+        if (/[^0-9]/.test(user_dni)) {
+            return res.status(400).json({ "Error": "DNI must be an integer" })
+        }
+        const dniLenght = user_dni.toString().length
+        if (dniLenght < 8) {
+            return res.status(400).json({ "Error": "DNI must be at least 8 numbers" })
+        }
+        if (dniLenght > 10) {
+            return res.status(400).json({ "Error": "DNI must be at most 10 numbers" })
+        }
+        if (!user_dni) {
+            getUser_dni = getUser.dataValues.user_dni
+        }
+        else {
+            getUser_dni = user_dni
+        }
+
+        // Password conditions
+        if (user_password.length > 30) {
+            return res.status(400).json({ "Error": "Password must be at most 30 characters" })
+        }
+        if (user_password.length < 4) {
+            return res.status(400).json({ "Error": "Password must be at least 4 characters" })
+        }
+        if (!user_password) {
+            getUser_password = getUser.dataValues.user_password
+        }
+        else {
+            getUser_password = user_password
+        }
+        const passHash = await passwordHash(getUser_password)
+
+        // Role conditions
+        const roles = ["user", "admin"]
+        if (!roles.includes(user_role)) {
+            return res.status(400).json({ "Error": "The role does not exist" })
+        }
+        if (!user_role) {
+            getUser_role = getUser.dataValues.user_role
+        }
+        else {
+            getUser_role = user_role
+        }
+
+        // Birthdate conditions
+        if (!user_birthdate) {
+            getUser_birthdate = getUser.dataValues.user_birthdate
+        }
+        else {
+            getUser_birthdate = user_birthdate
+        }
+
+        await user.update({
+            user_name: getUser_name,
+            user_realname: getUser_realname,
+            user_lastname: getUser_lastname,
+            user_dni: getUser_dni,
+            user_birthdate: getUser_birthdate,
+            user_password: passHash,
+            user_role: getUser_role,
+        }, { where: { id } })
+        res.status(200).json({
+            id,
+            "User name": getUser_name,
+            "Name": getUser_realname,
+            "Lastname": getUser_lastname,
+            "DNI": getUser_dni,
+            "Role": getUser_role,
+            "Password": passHash,
+            "Birthdate": getUser_birthdate
+        })
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }
 }
+
+
+const updateTransactionAdmin = async (req, res) => {
+    try {
+        const id = req.params.id
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "Transaction id must be an integer" })
+        }
+        const { trans_cancel } = req.body
+        const getTransaction = await transaction.findOne({ where: { id } })
+        if (!getTransaction) {
+            return res.status(400).json({ "Error": "Transaction does not exists" })
+        }
+        if (!trans_cancel) {
+            getTrans_cancel = getTransaction.trans_cancel
+        }
+        else {
+            getTrans_cancel = trans_cancel
+        }
+        await transaction.update({
+            trans_cancel: getTrans_cancel,
+        }, {
+            where: { id }
+        })
+        res.status(200).json({ getTransaction })
+    }
+    catch (error) {
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        console.log(error.message)
+    }
+}
+
 
 // Delete user by id:
 const deleteUserByIdAdmin = async (req, res) => {
     try {
         const id = req.params.id
-        const getuser = await user.findOne({ where: { id } })
-        if (getuser) {
-            await user.destroy({ where: { id } })
-            res.status(200).json({ "Message": `User ${id} deleted` })
+        if (/[^0-9]/.test(id)) {
+            return res.status(400).json({ "Error": "user id must be an integer" })
         }
-        else {
-            res.status(404).json({ "Error": "User does not exists" })
+        const getUser = await user.findOne({ where: { id } })
+        if (!getUser) {
+            return res.status(400).json({ "Error": "User does not exists" })
         }
-    }
-    catch (error) {
-        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
-        console.log(error.message)
-    }
-}
-
-const updateTransactionAdmin = async (req, res) => {
-    try {
-        const id = req.params.id
-        const { trans_cancel } = req.body
-        const getTransaction = await transaction.findOne({ where: { id } })
-        if (getTransaction) {
-            if (!trans_cancel) {
-                getTrans_cancel = getTransaction.trans_cancel
-            }
-            else {
-                getTrans_cancel = trans_cancel
-            }
-            await transaction.update({
-                trans_cancel: getTrans_cancel,
-            }, {
-                where: { id }
-            })
-            res.status(200).json({ getTransaction })
+        if (req.user.user_role == 'admin') {
+            return res.status(400).json({ "Error": "You can't delete an admin account" })
         }
-        else {
-            res.status(404).json({ "Error": "Transaction does not exists" })
+        const getProduct = await product.findOne({where:{prod_user_id:id}})
+        if(getProduct){
+            return res.status(400).json({ "Error": "User owns products, cannot be removed" })
         }
+        await user.destroy({ where: { id } })
+        res.status(200).json({ "Message": `User ${id} deleted` })
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })

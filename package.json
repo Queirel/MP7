@@ -7,13 +7,15 @@
     "migrationout": "npx sequelize-cli db:migrate:undo:all",
     "premigration": "npx sequelize-cli db:migrate:undo:all",
     "migration": "npx sequelize-cli db:migrate",
-    "postmigration": "npx sequelize-cli db:seed:all",
+    "s": "npx sequelize-cli db:seed:all",
     "seedout": "npx sequelize-cli db:seed:undo:all",
     "seed": "npx sequelize-cli db:seed:undo:all",
     "postseed": "npx sequelize-cli db:seed:all",
+    "testseed": "npx sequelize-cli  db:seed --seed test-seed.js",
     "dev": "nodemon /src/index",
-    "test": "jest --verbose ./__test__/",
-    "test:coverage": "jest --coverage",
+    "test": "jest --verbose --detectOpenHandles ./__test__/",
+    "testfile": "jest --verbose --detectOpenHandles ./__test__/products.get.all.test.js",
+    "test:coverage": "jest --coverage --no-cache",
     "test:runinband": "jest --runInBand"
   },
   "keywords": [],
@@ -32,7 +34,6 @@
     "swagger-ui-express": "^4.6.0"
   },
   "devDependencies": {
-    "faker": "^6.6.6",
     "jest": "^29.4.2",
     "nodemon": "^2.0.20",
     "supertest": "^6.3.3"

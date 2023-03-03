@@ -26,7 +26,7 @@ const getTransactionById = async (req, res) => {
         }
         const getTransaction = await transaction.findOne({ where: { id } })
         if (!getTransaction) {
-            return res.status(404).send('Transaction does not exists')
+            return res.status(400).send('Transaction does not exists')
         }
         res.status(200).json(getTransaction)
     }
@@ -55,11 +55,11 @@ const createTransactionAndStockControl = async (req, res) => {
         const user_id = req.user.id
         const getProduct = await product.findOne({ where: { id: trans_prod_id } })
         if (!getProduct) {
-            return res.status(401).json({ "Error": 'Product does not exists' })
+            return res.status(400).json({ "Error": 'Product does not exists' })
         }
         const prod_user_id = getProduct.prod_user_id
         if (user_id == prod_user_id) {
-            return res.status(401).json({ "Error": 'You cant buy your own product' })
+            return res.status(400).json({ "Error": 'You cant buy your own product' })
         }
         if (!getProduct.dataValues.prod_published) {
             return res.status(400).json({ "Error": "You cant buy a paused product" })

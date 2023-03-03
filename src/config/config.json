@@ -1,10 +1,11 @@
-{   "development": {
+{   
+  "development": {
     "username": "postgres",
     "password": "password",
-    "database": "MP7",
+    "database": "MP72",
     "host": "localhost",
     "dialect": "postgres",
-
+    "logging":false,
     
     "seederStorage": "sequelize",
     "seederStorageTableName": "seeds",
@@ -13,11 +14,13 @@
     "migrateStorage": "sequelize",
     "migrateStorageTableName": "migrations"
   }, 
+
   "test": {
     "username": "postgres",
     "password": "password",
-    "database": "MP7",
+    "database": "MP72",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging":false
   }
 }

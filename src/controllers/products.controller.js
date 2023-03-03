@@ -4,9 +4,11 @@ const { product } = require("../models");
 // Get a products
 const getProducts = async (req, res) => {
     try {
-        const { offset, limit } = req.body
-        const getProds = await product.findAll({ attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'], where: { prod_published: true }, offset: offset, limit: limit })
-        res.status(200).json({ "Productos": getProds })
+        // const { offset, limit } = req.body
+        const getProds = await product.findAll({ attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'], where: { prod_published: true },
+        //  offset: offset, limit: limit
+         })
+        res.status(200).json({ "Products": getProds })
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
@@ -21,6 +23,12 @@ const getProductById = async (req, res) => {
         const id = req.params.id
 
         // Product id conditions
+        if (!id) {
+            return res.status(400).json({ "Error": "Id is missing" })
+        }
+        if (id=="") {
+            return res.status(400).json({ "Error": "id is empty" })
+        }
         if (/[^0-9]/.test(id)) {
             return res.status(400).json({ "Error": "Product id must be an integer" })
         }
@@ -41,7 +49,7 @@ const getProductById = async (req, res) => {
 // Get a product by category
 const getProdByCategory = async (req, res) => {
     try {
-        const { limit, offset } = req.body
+        // const { limit, offset } = req.body
         const prod_category = req.params.category
         console.log(prod_category)
 
@@ -51,12 +59,14 @@ const getProdByCategory = async (req, res) => {
             return res.status(400).json({ "Error": "The category does not exist" })
         }
 
-        const getProduct = await product.findAll({ where: { prod_category }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
+        const getProducts = await product.findAll({ where: { prod_category }, 
+            // limit: limit, offset: offset, 
+            attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
         if (getProduct.length == 0) {
             return res.status(400).json({ "Error": 'There is no products from that category' })
         }
 
-        res.status(200).json({ "Product": getProduct })
+        res.status(200).json({ "Product": getProducts })
 
     }
     catch (error) {
@@ -98,7 +108,7 @@ const saveProduct = async (req, res) => {
         const user_id = req.user.id
         const { prod_name, prod_price, prod_stock, prod_category } = req.body
 
-        // Price conditions
+        // Stock conditions
         if (/[^0-9]/.test(prod_stock)) {
             return res.status(400).json({ "Error": "Stock must be an integer" })
         }

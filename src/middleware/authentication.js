@@ -7,7 +7,7 @@ const authentication = (req, res, next) => {
             const token = bearerToken.split(' ')[1]
             jwt.verify(token, process.env.AUTH_PASSWORD, (error, payload) => {
                 if (error) {
-                    res.status(403).send('Some error while verifying token')
+                    return res.status(400).json({"Error":"Some error while verifying token"})
                 }
                     else {
                         req.user = payload
@@ -16,7 +16,7 @@ const authentication = (req, res, next) => {
             })
         }
         else {
-            res.status(403).send('You must be logged')
+            return res.status(400).json({'Error':'You must be logged'})
         }
      }
     catch (error) {

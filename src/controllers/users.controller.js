@@ -1,5 +1,4 @@
-const { user } = require("../models")
-// const jwt = require("jsonwebtoken")
+const { user, product } = require("../models")
 const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 
 
@@ -35,14 +34,14 @@ const updateOwnUser = async (req, res) => {
             getUser_name = getUser.dataValues.user_name
         }
         else {
-            if (/[^a-zA-Z]/.test(user_name)) {
-                return res.status(400).json({ "Error": "The username must be only letters" })
+            if (/[^a-zA-Z0-9]/.test(user_name)) {
+                return res.status(400).json({ "Error": "The username must be only letters and numbers" })
             }
-            if (user_name.length > 15) {
+            if (user_name.length >= 15) {
                 return res.status(400).json({ "Error": "The username must be less than 15 characters" })
             }
             if (user_name.length < 3) {
-                return res.status(400).json({ "Error": "The username must be at least 3 letters" })
+                return res.status(400).json({ "Error": "The username must be at least 3 characters" })
             }
             getUser_name = user_name
         }
@@ -53,7 +52,7 @@ const updateOwnUser = async (req, res) => {
             if (/[^a-zA-Z]/.test(user_realname)) {
                 return res.status(400).json({ "Error": "The name must be only letters" })
             }
-            if (user_realname.length > 15) {
+            if (user_realname.length >= 15) {
                 return res.status(400).json({ "Error": "The name must be less than 15 characters" })
             }
             if (user_realname.length < 3) {
@@ -68,7 +67,7 @@ const updateOwnUser = async (req, res) => {
             if (/[^a-zA-Z]/.test(user_lastname)) {
                 return res.status(400).json({ "Error": "The lastname must be only letters" })
             }
-            if (user_lastname.length > 15) {
+            if (user_lastname.length >= 15) {
                 return res.status(400).json({ "Error": "The lastname must be less than 15 characters" })
             }
             if (user_lastname.length < 2) {
@@ -83,10 +82,11 @@ const updateOwnUser = async (req, res) => {
             if (/[^0-9]/.test(user_dni)) {
                 return res.status(400).json({ "Error": "DNI must be an integer" })
             }
-            if (user_dni.length < 8) {
+            const dniLenght = user_dni.toString().length
+            if (dniLenght < 8) {
                 return res.status(400).json({ "Error": "DNI must be at least 8 numbers" })
             }
-            if (user_dni.length > 10) {
+            if (dniLenght > 10) {
                 return res.status(400).json({ "Error": "DNI must be at most 10 numbers" })
             }
             getUser_dni = user_dni
@@ -124,12 +124,14 @@ const deleteOwnUser = async (req, res) => {
     try {
         const id = req.user.id
         if (req.user.user_role == 'admin') {
-            return res.status(403).json({ "Error": "You can't delete an admin account" })
+            return res.status(400).json({ "Error": "You can't delete an admin account" })
         }
-
+        const getProduct = await product.findOne({where:{prod_user_id:id}})
+        if(getProduct){
+            return res.status(400).json({ "Error": "User owns products, cannot be removed" })
+        }
         await user.destroy({ where: { id } })
         res.status(200).json({ "Message": "User deleted" })
-
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
