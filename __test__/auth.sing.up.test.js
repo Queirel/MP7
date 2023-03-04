@@ -5,39 +5,43 @@ const { user } = require("../src/models")
 
 let testServer
 beforeAll(async () => {
-    testServer = app.listen(31000)
+    testServer = app.listen(3000)
 })
 
-// Database cleaner
-test("Clean database", async () => {
-    await user.sync({
-        force: true
-    });
-})
 
-// Create Admin
-test("Create Admin", async () => {
-    await user.create({
-        user_name: "fede",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "admin"
-    });
-});
+describe("DATABASE INIT", () => {
 
-// Create User
-test("Create User", async () => {
-    await user.create({
-        user_name: "fedenormaluser",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "user"
+    // Database cleaner
+    test("Clean database", async () => {
+        await user.sync({
+            force: true
+        });
+    })
+
+    // Create Admin
+    test("Create Admin", async () => {
+        await user.create({
+            user_name: "fede",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "admin"
+        });
+    });
+
+    // Create User
+    test("Create User", async () => {
+        await user.create({
+            user_name: "fedenormaluser",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "user"
+        });
     });
 });
 
@@ -903,14 +907,18 @@ describe("🟨 POST /sign/up", () => {
     });
 });
 
-// Database cleaner
-describe("Clean database", () => {
-    test("", async () => {
-        await user.sync({
-            force: true
-        });
-    })
-});
+describe("DATABASE END", () => {
+
+    // Database cleaner
+    describe("Clean database", () => {
+        test("", async () => {
+            await user.sync({
+                force: true
+            });
+        })
+    });
+})
+
 
 afterAll((done) => {
     testServer.close()

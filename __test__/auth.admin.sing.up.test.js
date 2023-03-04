@@ -8,36 +8,39 @@ beforeAll(async () => {
     testServer = app.listen(3000)
 })
 
-// Database cleaner
+describe("DATABASE INIT", () => {
+
+    // Database cleaner
     test("Clean database", async () => {
         await user.sync({
             force: true
         });
     })
 
-// Create Admin
-test("Create Admin", async () => {
-    await user.create({
-        user_name: "fede",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "admin"
+    // Create Admin
+    test("Create Admin", async () => {
+        await user.create({
+            user_name: "fede",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "admin"
+        });
     });
-});
 
-// Create User
-test("Create User", async () => {
-    await user.create({
-        user_name: "fedenormaluser",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "user"
+    // Create User
+    test("Create User", async () => {
+        await user.create({
+            user_name: "fedenormaluser",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "user"
+        });
     });
 });
 
@@ -104,7 +107,7 @@ describe("🟨 POST /admin/sign/up", () => {
                 expect(getUser).toBeDefined()
                 expect(getUser.id).toBeDefined()
                 expect(getUser.user_name).toBe(User.user_name)
-                expect(await passwordCompare(User.user_password,getUser.user_password)).toBe(true) 
+                expect(await passwordCompare(User.user_password, getUser.user_password)).toBe(true)
                 expect(getUser.user_realname).toBe(User.user_realname)
                 expect(getUser.user_lastname).toBe(User.user_lastname)
                 expect(getUser.user_dni).toBe(User.user_dni)
@@ -1116,13 +1119,16 @@ describe("🟨 POST /admin/sign/up", () => {
     });
 });
 
-// Database cleaner
-describe("Clean database", () => {
-    test("", async () => {
-        await user.sync({
-            force: true
-        });
-    })
+describe("DATABASE END", () => {
+
+    // Database cleaner
+    describe("Clean database", () => {
+        test("", async () => {
+            await user.sync({
+                force: true
+            });
+        })
+    });
 });
 
 afterAll((done) => {

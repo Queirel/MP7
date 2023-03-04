@@ -96,82 +96,125 @@ const Usertoken = async () => {
 }
 
 // GET 
-describe("GET /products", () => {
+describe("GET /products/user", () => {
 
     describe("               ✅✅✅✅✅ 200 ✅✅✅✅✅", () => {
 
-        describe("🔘 GET PRODUCTS", () => {
+        describe("🔘 GET PRODUCT:", () => {
 
-            describe("Getting products not logged", () => {
+            describe("With an existing user id", () => {
+                const id = 1
 
                 test("should respond with a 200 status code", async () => {
-                    const response = await request(app).get("/products").send();
+                    const response = await request(app).get(`/products/user/${id}`);
                     expect(response.statusCode).toBe(200);
                 });
 
                 test("should respond an array", async () => {
-                    const response = await request(app).get("/products").send();
+                    const response = await request(app).get(`/products/user/${id}`)
                     expect(response.body).toBeInstanceOf(Object);
                 });
 
-                // // should respond with the published products array
-                // test("should respond with the published products array", async () => {
-                //     const getProds = await product.findAll({ attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'], where: { prod_published: true } })
-                //     const response = await request(app).get("/products").send();
-                //     expect(response.body).toEqual({ "Products": getProds })
+                // // shoud respond with a json object containsing the new user with an id
+                // test("should respond with the product by id", async () => {
+                //     const getProduct = await product.findAll({ where: { prod_id: id }, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_id'] })
+                //     const response = await request(app).get(`/products/user/${id}`)
+                //     expect(response.body).toEqual({ "Product": getProduct.dataValues })
                 // });
 
                 // should respond a json as a content type
                 test("should have a Content-Type: application/json header", async () => {
-                    const response = await request(app).get("/products").send();
+                    const response = await request(app).get(`/products/user/${id}`)
                     expect(response.headers["content-type"]).toEqual(
                         expect.stringContaining("json")
                     );
                 });
+
+                test("should a message if id is empty and 200 status code", async () => {
+                    const id = 174
+                    const response = await request(app).get(`/products/user/${id}`)
+                    expect(response.status).toBe(200)
+                    expect(response.body).toEqual({ "Message": "There is no products from the user" })
+                });
             });
+
             describe("Get products being logged as 'admin'", () => {
+                const id = 1
                 test("should respond with a 200 status code", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await token()}` })
-                        .send();
                     expect(response.statusCode).toBe(200);
                 });
+
                 test("should respond an array", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await token()}` })
-                        .send();
                     expect(response.body).toBeInstanceOf(Object);
                 });
+
                 test("should have a Content-Type: application/json header", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await token()}` })
-                        .send();
                     expect(response.headers["content-type"]).toEqual(
-                        expect.stringContaining("json"))
+                        expect.stringContaining("json")
+                    );
+                });
+
+                test("should a message if id is empty and 200 status code", async () => {
+                    const id = 174
+                    const response = await request(app).get(`/products/user/${id}`)
+                        .set({ 'Authorization': `Bearer ${await token()}` })
+                    expect(response.status).toBe(200)
+                    expect(response.body).toEqual({ "Message": "There is no products from the user" })
                 });
             });
+
+
 
             describe("Get products being logged as 'user'", () => {
+                const id = 1
                 test("should respond with a 200 status code", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await Usertoken()}` })
                         .send();
                     expect(response.statusCode).toBe(200);
                 });
 
                 test("should respond an array", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await Usertoken()}` })
-                        .send();
                     expect(response.body).toBeInstanceOf(Object);
                 });
 
                 test("should have a Content-Type: application/json header", async () => {
-                    const response = await request(app).get(`/products`)
+                    const response = await request(app).get(`/products/user/${id}`)
                         .set({ 'Authorization': `Bearer ${await Usertoken()}` })
-                        .send();
                     expect(response.headers["content-type"]).toEqual(
-                        expect.stringContaining("json"))
+                        expect.stringContaining("json")
+                    );
+                });
+
+                test("should a message if id is empty and 200 status code", async () => {
+                    const id = 174
+                    const response = await request(app).get(`/products/user/${id}`)
+                        .set({ 'Authorization': `Bearer ${await Usertoken()}` })
+                    expect(response.status).toBe(200)
+                    expect(response.body).toEqual({ "Message": "There is no products from the user" })
+                });
+            });
+        });
+    });
+
+    describe("              ❌❌❌❌❌ 40X ❌❌❌❌❌", () => {
+
+        describe("🔘 PRODUCT id:", () => {
+
+            describe("when id is not an integer", () => {
+                const id = "asdvd"
+                test("should respond with a 400 status code and the type of error", async () => {
+                    const response = await request(app).get(`/products/user/${id}`)
+                    expect(response.status).toBe(400)
+                    expect(response.body).toEqual({ "Error": "User id must be an integer" })
                 });
             });
         });

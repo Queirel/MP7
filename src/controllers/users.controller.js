@@ -12,7 +12,7 @@ const getUserById = async (req, res) => {
             return res.status(400).json({ "Error": "User id must be an integer" })
         } const getUser = await user.findOne({ where: { id } })
         if (!getUser) {
-            return res.status(404).json({ "Error": "User does not exists" })
+            return res.status(400).json({ "Error": "User does not exists" })
         }
         res.status(200).json({ "User name": getUser.user_name })
     }

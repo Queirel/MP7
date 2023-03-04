@@ -8,36 +8,39 @@ beforeAll(async () => {
     testServer = app.listen(3000)
 })
 
-// Database cleaner
-test("Clean database", async () => {
-    await user.sync({
-        force: true
-    });
-})
+describe("DATABASE INIT", () => {
 
-// Create Admin
-test("Create Admin", async () => {
-    await user.create({
-        user_name: "fede",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "admin"
-    });
-});
+    // Database cleaner
+    test("Clean database", async () => {
+        await user.sync({
+            force: true
+        });
+    })
 
-// Create User /username letters  / -password letters
-test("Create User", async () => {
-    await user.create({
-        user_name: "fedenormaluser",
-        user_password: await passwordHash("pass"),
-        user_realname: "Fede",
-        user_lastname: "lastname",
-        user_dni: 12345678,
-        user_birthdate: "10/07/1987",
-        user_role: "user"
+    // Create Admin
+    test("Create Admin", async () => {
+        await user.create({
+            user_name: "fede",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "admin"
+        });
+    });
+
+    // Create User /username letters  / -password letters
+    test("Create User", async () => {
+        await user.create({
+            user_name: "fedenormaluser",
+            user_password: await passwordHash("pass"),
+            user_realname: "Fede",
+            user_lastname: "lastname",
+            user_dni: 12345678,
+            user_birthdate: "10/07/1987",
+            user_role: "user"
+        });
     });
 });
 
@@ -226,10 +229,10 @@ describe("🟨 POST /sign/in", () => {
                 });
             });
         });
-    
+
         // ---------------------------CREATE USER
 
-        describe("🔘 LOGIN BEEN LOGGED:", () => {
+        describe("🔘 LOGIN being LOGGED:", () => {
 
             describe("when the user is logged as 'admin'", () => {
                 test("should respond with a 400 status code and the type of error", async () => {
@@ -262,13 +265,16 @@ describe("🟨 POST /sign/in", () => {
     });
 });
 
-// Database cleaner
-describe("Clean database", () => {
-    test("", async () => {
-        await user.sync({
-            force: true
-        });
-    })
+describe("DATABASE END", () => {
+
+    // Database cleaner
+    describe("Clean database", () => {
+        test("", async () => {
+            await user.sync({
+                force: true
+            });
+        })
+    });
 });
 
 afterAll((done) => {

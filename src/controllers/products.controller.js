@@ -51,7 +51,6 @@ const getProdByCategory = async (req, res) => {
     try {
         // const { limit, offset } = req.body
         const prod_category = req.params.category
-        console.log(prod_category)
 
         // Category conditions
         const categorys = ["agro", "fashion", "food", "home", "tecnology", "tools", "toys"]
@@ -62,8 +61,8 @@ const getProdByCategory = async (req, res) => {
         const getProducts = await product.findAll({ where: { prod_category }, 
             // limit: limit, offset: offset, 
             attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
-        if (getProduct.length == 0) {
-            return res.status(400).json({ "Error": 'There is no products from that category' })
+        if (getProducts.length == 0) {
+            return res.status(200).json({ "Message": 'There is no products from that category' })
         }
 
         res.status(200).json({ "Product": getProducts })
@@ -90,7 +89,7 @@ const getProductByUserId = async (req, res) => {
         const getProducts = await product.findAll({ where: { prod_user_id }, limit: limit, offset: offset, attributes: ['prod_name', 'prod_user_id', 'prod_price', 'prod_stock', 'prod_category'] })
 
         if (getProducts.length == 0) {
-            res.status(400).json({ "Error": "There is no products from the user" })
+            return res.status(200).json({ "Message": "There is no products from the user" })
         }
 
         res.status(200).json({ "Products": getProducts })
@@ -283,17 +282,17 @@ const deleteProduct = async (req, res) => {
         const id = req.params.id
 
         // Product id conditions
-        if (/[^0-9]/.test(id)) {
-            return res.status(400).json({ "Error": "Product id must be an integer" })
-        }
+        // if (/[^0-9]/.test(id)) {
+        //     return res.status(400).json({ "Error": "Product id must be an integer" })
+        // }
 
-        const getProduct = await product.findOne({ where: { id } })
-        if (!getProduct) {
-            return res.status(400).json({ "Error": "Product does not exists" })
-        }
+        // const getProduct = await product.findOne({ where: { id } })
+        // if (!getProduct) {
+        //     return res.status(400).json({ "Error": "Product does not exists" })
+        // }
 
         await product.destroy({ where: { id } })
-        res.status(200).json(`Product ${id} deleted`)
+        res.status(200).json({"Message": `Product ${id} deleted`})
     }
     catch (error) {
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
