@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "password",
     "database": "MP72",
-    "host": "localhost",
+    "host": "172.31.3.59",
     "dialect": "postgres",
     "logging":false,
     
@@ -19,7 +19,7 @@
     "username": "postgres",
     "password": "password",
     "database": "MP72",
-    "host": "localhost",
+    "host": "172.31.3.59",
     "dialect": "postgres",
     "logging":false
   }
