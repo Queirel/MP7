@@ -363,3 +363,5 @@ MODELS
             Existent user/product/transaction
 `        category`
             Allow only the category list
+
+            aws t2 micro

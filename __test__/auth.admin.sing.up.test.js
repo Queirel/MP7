@@ -71,7 +71,6 @@ describe("🟨 POST /admin/sign/up", () => {
 
         describe("🔘 CREATE USER", () => {
 
-            // should respond with a 200 code
             test("should respond with a 200 status code", async () => {
                 const response = await request(app)
                     .post("/admin/sign/up")

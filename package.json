@@ -13,7 +13,7 @@
     "postseed": "npx sequelize-cli db:seed:all",
     "testseed": "npx sequelize-cli  db:seed --seed test-seed.js",
     "dev": "nodemon /src/index",
-    "test": "jest --verbose --detectOpenHandles ./__test__/",
+    "test": "jest --watch --runInBand --coverage --verbose --detectOpenHandles ./__test__/",
     "testfile": "jest --verbose --detectOpenHandles ./__test__/users.get.by.id.test.js",
     "test:coverage": "jest --coverage --no-cache",
     "test:runinband": "jest --runInBand"

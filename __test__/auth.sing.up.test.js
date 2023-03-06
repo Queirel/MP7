@@ -218,7 +218,7 @@ describe("🟨 POST /sign/up", () => {
                     const response = await request(app)
                         .post("/sign/up")
                         .send({
-                            user_name: "isusr",
+                            user_name: "isr",
                             user_password: "pass",
                             user_realname: "Fede",
                             user_lastname: "lastname",
