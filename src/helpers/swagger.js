@@ -26,10 +26,9 @@ const swaggerSpec = {
             bearerAuth: []
         }],
         servers: [{
-            url: 'http://localhost:3000/',
+            url: 'http://3.15.151.41:3000',
         }],
     },
-    // apis: ['./src/controllers/*.js'],
    apis: ['./src/documentation/*.js']
 }
 
