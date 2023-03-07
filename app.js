@@ -1,6 +1,7 @@
 // Express app
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 // Import Routes
 const transactionsRoutes = require('./src/routes/transactions.routes')
@@ -15,6 +16,7 @@ const swaggerSpec = require('./src/helpers/swagger')
 const swaggerJsDoc = require('swagger-jsdoc');
 
 // Middlewares
+app.use(cors()) 
 app.use(express.json({limit: '25mb'}))
 app.use(express.urlencoded({ extended: false, limit: '25mb' }))
 
