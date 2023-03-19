@@ -26,7 +26,7 @@ const swaggerSpec = {
             bearerAuth: []
         }],
         servers: [{
-            url: 'http://3.15.151.41:3000',
+            url: '',
         }],
     },
    apis: ['./src/documentation/*.js']

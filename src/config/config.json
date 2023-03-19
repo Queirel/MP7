@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "password",
     "database": "marketplace",
-    "host": "marketplace.csigyf5niqgz.us-east-2.rds.amazonaws.com",
+    "host": "postgresmp",
     "dialect": "postgres",
     "logging":false,
     
@@ -19,7 +19,7 @@
     "username": "postgres",
     "password": "password",
     "database": "marketplace",
-    "host": "marketplace.csigyf5niqgz.us-east-2.rds.amazonaws.com",
+    "host": "postgresmp",
     "dialect": "postgres",
     "logging":false
   }
