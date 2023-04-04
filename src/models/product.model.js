@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    prod_image: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     prod_published: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

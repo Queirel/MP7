@@ -2,7 +2,8 @@ require('dotenv').config()
 
 const app = require('./app');
 const port = process.env.PORT || 3000
-const { sequelize } = require('./src/models')
+const { sequelize } = require('./src/models');
+const { default: axios } = require('axios');
 
 // Listen
 app.listen(port, async () => {
