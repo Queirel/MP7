@@ -24,12 +24,12 @@ Frameworks
 Infrastructure
 - Postgress✅
 - GIT✅
-`- Build + Coverage`
-`- AWS EC2`
-`- AWS RDS`
+`- Build + Coverage`✅
+`- AWS EC2`✅
+`- AWS RDS`✅
 `- CI/CD`
 -` AWS Cloudwatch`
-`- AWS: Fargate`
+`- AWS: Fargate`✅
 
 
 - Quitar Role de SignUp✅
@@ -165,20 +165,59 @@ Infrastructure
         - Agregar restriccion al PUT de productos de admin
     <!-- - FAlatara algun US ? -->
 
-`EPIC tener registro de direccion de usuarios google api para validar direcciones geolocations` ✅
+`EPIC tener registro de direccion de usuarios google api para validar direcciones en geocoding` ✅
+    - Como user, quiero poder proporcionar mi direccion para los envios
+        - Items a agregar entre los datos del usuario: calle, numeracion y localidad
+        - adaptar post
+        - Añadir al swagger
+        - añadir casos de test 
+    - Como user quiero poder modificar mi direccion en cualquier momento
+        - adaptar los put
+        - Añadir al swagger
+        - añadir casos de test 
+    - Como user quiero poder ver mi direccion en el mapa para confirmar la localizacion
+        - adaptar los get
+        - adaptar swagger
+        - añadir casos de test 
+    - Como admin, quiero poder modificar la direccion de los usuarios
+        - adaptar put 
+        - adaptar swagger
+        - añadir casos de test 
+    - Como sistema, quiero poder chequear la existencia de la direccion que se provee antes de proceder
+        - Agregar helper de Geocode
+        - Agregar controller
+        - adaptar swagger
+        - añadir casos de test  
+    - Como sistema, si la direccion es valida, quiero poder mostrar esa direccion en el mapa
+        - Enviar el URL de la localizacion con Geocode
+        - adaptar swagger
+        - añadir casos de test  
+    - Como sistema, si la direccion es valida, quiero guardar el place id en la base de datos de cada usuario
+        - agregar migration para la direccion del usuario
+        - recibir el place id con Geocode y guardar en base de datos
+        - adaptar swagger
+        - añadir casos de test  
 
 `EPIC Payment` ✅
-    - Como user, quiero poder comprar un solo producto
+    - Como user, quiero poder comprar un producto
+        - adaptar stripe a las transacciones
+        - adaptar swagger
+        - añadir casos de test  
+    - Como user, quiero poder ver si el pago fue realizado con exito o rechazado
+        - adaptar los get
+        - adaptar swagger
+        - añadir casos de test  
+    - Como sistema se debe poder acceder a la modificacion el stock si la transaccion fue exitosa
+        - adaptar los get
+        - adaptar swagger
+        - añadir casos de test  
+    - Como sistema quiero poder guardar al cliente para una proxima transaccion
+        - agregar migration de cliente stripe
+        - agregar id del cliente en base de datos
+        <!-- - Para luego ? 
+    - Como sistema quiero poder guardar la tarjeta del cliente para una proxima transaccion
     - Como user, quiero poder seleccionar y comprar varios productos al mismo tiempo
     - Como user, quiero poder pagar los productos elegidos con tarjeta de credito o debito
-    - Como user, quiero poder elegir pagar en cuotas o directo
-    - Como admin, quiero poder hacer compras de prueba
-    - Como sistema quiero poder chequear el estado de la transaccion
-    - Como sistema se debe modificar el stock si la transaccion fue exitosa
+    - Como user, quiero poder elegir pagar en una o varias cuotas -->
 
 `EPIC product image` ✅
-
-
-`Mirate unos videos de SCRUM` ✅
-`Segui con Swagger` ✅
-

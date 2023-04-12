@@ -1,5 +1,6 @@
 const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 const jwt = require("jsonwebtoken")
+const { geocode } = require("../helpers/geocode");
 const { user } = require("../models")
 require('dotenv').config()
 
@@ -55,7 +56,7 @@ const signUp = async (req, res) => {
             })
             return res.status(400).json({ "Error": "You are already logged" })
         }
-        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname } = req.body
+        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_street_number, user_route, user_locality } = req.body
         if (!user_name) {
             return res.status(400).json({ "Error": "The username field must be completed" })
         }
@@ -126,6 +127,22 @@ const signUp = async (req, res) => {
         if (!user_birthdate) {
             return res.status(400).json({ "Error": "The birthdate field must be completed" })
         }
+
+        if (user_street_number.length > 30) {
+            return res.status(400).json({ "Error": "The street number must be at most 10 characters" })
+        }
+        if (user_route.length > 30) {
+            return res.status(400).json({ "Error": "Route must be at most 30 characters" })
+        }
+        if (user_locality.length > 30) {
+            return res.status(400).json({ "Error": "Locality must be at most 30 characters" })
+        }
+        const user_address = `${user_street_number},${user_route},${user_locality}`;
+        const address = await geocode(user_address);
+        if(address == "Error"){
+            return res.status(400).json({ "Error": "Some address field is incorrect" })
+        }
+
         const passHash = await passwordHash(user_password)
         const newUser = await user.create({
             user_name,
@@ -133,7 +150,8 @@ const signUp = async (req, res) => {
             user_realname,
             user_birthdate,
             user_lastname,
-            user_dni
+            user_dni,
+            user_address: address.Place
         })
         res.status(200).send({
             id: newUser.id,
@@ -141,7 +159,8 @@ const signUp = async (req, res) => {
             "Name": newUser.user_realname,
             "Lastname": newUser.user_lastname,
             "DNI": newUser.user_dni,
-            "Birthdate": newUser.user_birthdate
+            "Birthdate": newUser.user_birthdate,
+            "Address": address
         })
     }
     catch (error) {
@@ -153,7 +172,7 @@ const signUp = async (req, res) => {
 // Register ---> Create User By Admin (with roles)
 const signUpAdmin = async (req, res) => {
     try {
-        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_role } = req.body
+        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_role, user_street_number, user_route, user_locality } = req.body
         if (!user_name) {
             return res.status(400).json({ "Error": "The username field must be completed" })
         }
@@ -232,6 +251,23 @@ const signUpAdmin = async (req, res) => {
         if (!roles.includes(user_role)) {
             return res.status(400).json({ "Error": "The role does not exist" })
         }
+
+        
+        if (user_street_number.length > 30) {
+            return res.status(400).json({ "Error": "The street number must be at most 10 characters" })
+        }
+        if (user_route.length > 30) {
+            return res.status(400).json({ "Error": "Route must be at most 30 characters" })
+        }
+        if (user_locality.length > 30) {
+            return res.status(400).json({ "Error": "Locality must be at most 30 characters" })
+        }
+        const user_address = `${user_street_number},${user_route},${user_locality}`;
+        const address = await geocode(user_address);
+        if(address == "Error"){
+            return res.status(400).json({ "Error": "Some address field is incorrect" })
+        }
+
         const passHash = await passwordHash(user_password)
         const newUser = await user.create({
                 user_name,
@@ -240,7 +276,8 @@ const signUpAdmin = async (req, res) => {
             user_role,
             user_birthdate,
             user_lastname,
-            user_dni
+            user_dni,
+            user_address: address.Place
         })
         res.status(200).json( newUser.dataValues )
     }

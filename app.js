@@ -11,6 +11,7 @@ const userRoutes = require('./src/routes/users.routes')
 const loginRoutes = require('./src/routes/auth.routes')
 const adminRoutes = require('./src/routes/admin.routes')
 const filesRoutes = require('./src/routes/files.routes')
+const geocodeRoutes = require('./src/routes/geocode.routes')
 const stripeRoutes = require('./src/routes/stripe.routes')
 
 // Swagger
@@ -34,6 +35,7 @@ app.use('/products', productsRoutes)
 app.use('/transactions', transactionsRoutes)
 app.use('/files', filesRoutes)
 app.use('/stripe', stripeRoutes)
+app.use('/geocode', geocodeRoutes)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerSpec)));
 
 

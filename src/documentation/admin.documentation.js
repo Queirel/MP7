@@ -255,6 +255,12 @@
 *                type: integer
 *              user_birthdate: 
 *                type: date
+*              user_route:  
+*                type: string
+*              user_street_number:  
+*                type: string
+*              user_locality:  
+*                type: string
 *    summary: Update user by id
 *    tags: [Admin]
 *    responses:
@@ -345,6 +351,12 @@
 *              user_role: 
 *                type: string
 *                enum: [user, admin]
+*              user_route:  
+*                type: string
+*              user_street_number:  
+*                type: string
+*              user_locality:  
+*                type: string
 *            required:
 *              - user_name
 *              - user_password
@@ -353,6 +365,9 @@
 *              - user_dni
 *              - user_role
 *              - user_birthdate
+*              - user_route
+*              - user_street_number
+*              - user_locality
 *    summary: User register
 *    tags: [Admin]
 *    responses:
