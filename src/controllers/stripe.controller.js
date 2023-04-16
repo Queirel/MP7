@@ -42,7 +42,7 @@ const createCostumer = async (req, res) => {
       card: card_Id,
       customer: customer_Id
     });
-    res.status(200).send(createCharge.status);
+    res.status(200).send(createCharge);
   };
   
   module.exports = {
