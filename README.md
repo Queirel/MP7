@@ -46,14 +46,14 @@ GOOGLE:
 
 ## Tech Stack
 
-- Node:
+- [Node]:
 To build scalable network applications.
 - Express:
 Allows to set up middlewares to respond to HTTP Requests
 - Postgres:
 Open source object-relational database
 - Sequelize:
-ORM for Postgres¡. Featuring solid transaction support, relations, eager and lazy loading, read replication and more.
+ORM for Postgres. Featuring solid transaction support, relations, eager and lazy loading, read replication and more.
 - bcryptjs:
 Turns a simple password into fixed-length characters called a hash
 - jsonwebtoken:
