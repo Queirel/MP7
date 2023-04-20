@@ -1,11 +1,14 @@
 // const striper = require("../helpers/stripe");
 const { Router } = require("express");
 const { createCharges, createCostumer, addCard } = require("../controllers/stripe.controller");
-const stripe = require("stripe")(process.env.STRIPE_SK);
+const { bucket } = require("../helpers/s3");
+// const stripe = require("stripe")(process.env.STRIPE_SK);
 const router = Router();
 
-router.post("/create-Customer", createCostumer);
+
+// router.post("/", bucket);
 router.post("/add-Card", addCard);
+router.post("/create-Customer", createCostumer);
 router.post("/create-Charges", createCharges);
 
 // router.post("/", async (req, res) => {

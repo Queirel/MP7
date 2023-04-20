@@ -34,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     prod_image: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     prod_published: {
       type: DataTypes.BOOLEAN,

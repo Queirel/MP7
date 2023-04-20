@@ -439,7 +439,7 @@ const updateUserByIdAdmin = async (req, res) => {
       user_lastname,
       user_dni,
       user_role,
-      user_birthdate,
+      user_email,
       user_street_number,
       user_route,
       user_locality,
@@ -525,10 +525,10 @@ const updateUserByIdAdmin = async (req, res) => {
       }
       getUser_dni = user_dni;
     }
-    if (!user_birthdate) {
-      getUser_birthdate = getUser.dataValues.user_birthdate;
+    if (!user_email) {
+      getUser_email = getUser.dataValues.user_email;
     } else {
-      getUser_birthdate = user_birthdate;
+      getUser_email = user_email;
     }
     // Password conditions
     if (user_password.length > 30) {
@@ -601,7 +601,7 @@ const updateUserByIdAdmin = async (req, res) => {
         user_realname: getUser_realname,
         user_lastname: getUser_lastname,
         user_dni: getUser_dni,
-        user_birthdate: getUser_birthdate,
+        user_email: getUser_email,
         user_password: passHash,
         user_role: getUser_role,
         user_address: getUser_address,
@@ -616,7 +616,7 @@ const updateUserByIdAdmin = async (req, res) => {
       DNI: getUser_dni,
       Role: getUser_role,
       Password: passHash,
-      Birthdate: getUser_birthdate,
+      email: getUser_email,
       Address: address,
     });
   } catch (error) {

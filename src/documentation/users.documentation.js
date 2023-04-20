@@ -10,7 +10,7 @@
  *          - user_realname
  *          - user_lastname
  *          - user_dni
- *          - user_birthdate
+ *          - user_email
  *          - user_password
  *       properties:
  *          id:
@@ -28,9 +28,9 @@
  *          user_dni:
  *              type: integer
  *              description: The document number of the user
- *          user_birthdate:
+ *          user_email:
  *              type: date
- *              description: The user birthdate
+ *              description: The user email
  *          user_password:
  *              type: string
  *              description: The account password
@@ -46,7 +46,7 @@
  *          user_realname: Alexander
  *          user_lastname: Dewdney
  *          user_dni: 4127893
- *          user_birthdate: 10/07/1987
+ *          user_email: 10/07/1987
  *          user_password: jasd89u298idhc9034csdf23f45tg
  *          createdAt: 20/01/2023
  *          updateAt: 23/01/2023
@@ -101,7 +101,7 @@
 *                type: string
 *              user_dni:       
 *                type: integer
-*              user_birthdate: 
+*              user_email: 
 *                type: date
 *    summary: Update the own user
 *    tags: [Users]

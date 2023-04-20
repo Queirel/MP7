@@ -33,7 +33,7 @@ describe("DATABASE INIT", () => {
             user_realname: "Fede",
             user_lastname: "lastname",
             user_dni: 12345678,
-            user_birthdate: "10/07/1987",
+            user_email: "10/07/1987",
             user_role: "admin"
         });
     });
@@ -46,7 +46,7 @@ describe("DATABASE INIT", () => {
             user_realname: "Fede",
             user_lastname: "lastname",
             user_dni: 12345678,
-            user_birthdate: "10/07/1987",
+            user_email: "10/07/1987",
             user_role: "user"
         });
     });

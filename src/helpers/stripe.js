@@ -1,56 +1,47 @@
+/** @format */
+
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
-const createCostumer = async (req, res) => {
-    const { email, name } = req.body;
-    const customer = await stripe.customers.create({
-      name,
-      email,
-    });
-    res.status(200).send(customer);
-  };
-  
-  const addCard = async (req, res) => {
-    const {
-      customer_Id,
-      card_Name,
-      card_ExpYear,
-      card_ExpMonth,
-      card_Number,
-      card_CVC,
-    } = req.body;
-  
-    const card_Token = await stripe.tokens.create({
-      card:{name: card_Name,
+const createCustomer = async (name, email) => {
+  const customer = await stripe.customers.create({
+    name,
+    email,
+  });
+  return customer;
+};
+
+const addCard = async ( customer_Id, card_Name, card_ExpYear, card_ExpMonth, card_Number, card_CVC) => {
+  const card_Token = await stripe.tokens.create({
+    card: {
+      name: card_Name,
       number: card_Number,
       exp_month: card_ExpMonth,
       exp_year: card_ExpYear,
-      cvc: card_CVC}
-    });
-  
-    const card = await stripe.customers.createSource(customer_Id,{
-      source: card_Token.id
-    })
-    res.status(200).json({card: card.id});
-  };
-  
-  const createCharges = async (req, res) => {
-    const { currency, amount, email, card_Id, customer_Id } = req.body;
-    const createCharge = await stripe.charges.create({
-      receipt_email: email,
-      amount: amount*100,
-      currency,
-      card: card_Id,
-      customer: customer_Id
-    });
-    res.status(200).send(createCharge);
-  };
-  
-  module.exports = {
-    createCostumer,
-    addCard,
-    createCharges
-  }
+      cvc: card_CVC,
+    },
+  });
+  const card = await stripe.customers.createSource(customer_Id, {
+    source: card_Token.id,
+  });
+  return card.id
+};
 
+const createCharges = async (amount, email, card_Id, customer_Id) => {
+  const createCharge = await stripe.charges.create({
+    receipt_email: email,
+    amount: amount * 100,
+    currency: "USD",
+    card: card_Id,
+    customer: customer_Id,
+  });
+  return createCharge
+};
+
+module.exports = {
+  createCustomer,
+  addCard,
+  createCharges,
+};
 
 // function createStripeConnection(stripe_api_key){
 //     const Stripe = require("stripe");
@@ -68,10 +59,7 @@ const createCostumer = async (req, res) => {
 // const stripe = createStripeConnection(process.env.STRIPE_SK);
 // console.log(await stripe.invoices.list());
 
-
 // // const stripe = require('stripe')(process.env.STRIPE_SK)
-
-
 
 // //create new customer
 
@@ -94,7 +82,6 @@ const createCostumer = async (req, res) => {
 //     })
 
 // }
-
 
 // //createCustomer();
 
@@ -155,7 +142,6 @@ const createCostumer = async (req, res) => {
 
 // //addCardToCustomer();
 
-
 // var chargeCustomerThroughCustomerID = function () {
 
 //     var param = {
@@ -205,7 +191,6 @@ const createCostumer = async (req, res) => {
 
 // var getAllCustomers = function () {
 
-
 //     stripe.customers.list({limit: 4},function (err,customers) {
 //         if(err)
 //         {
@@ -220,7 +205,6 @@ const createCostumer = async (req, res) => {
 // }
 
 // getAllCustomers();
-
 
 // const srtipeProduct = async(product_id, quantity, price, ) =>{
 
@@ -239,7 +223,7 @@ const createCostumer = async (req, res) => {
 //             {
 //                 price,
 //                 quantity,
-                
+
 //             }
 //             //product x+1
 //         ],
@@ -258,14 +242,13 @@ const createCostumer = async (req, res) => {
 //         //4000 0000 0000 9995
 //         cancel_url:"http://localhost:3000/fail"
 
-//     }) 
+//     })
 
 // return session
 
 // }
 
 // module.exports = {
-//     srtipeCheckout, 
+//     srtipeCheckout,
 //     srtipeProduct
 // }
-

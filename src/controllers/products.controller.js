@@ -125,7 +125,7 @@ const saveProduct = async (req, res) => {
         if (prod_price <= 0) {
             return res.status(400).json({ "Error": "Price must be more than 0" })
         }
-        if (prod_price > 1000) {
+        if (prod_price > 100000) {
             return res.status(400).json({ "Error": "Price must be less than 100000" })
         }
 

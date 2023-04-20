@@ -31,14 +31,14 @@
  *                   Name: Juan
  *                   Lastname: Ignacio
  *                   DNI: 123456
- *                   Birthdate: 10/11/12
+ *                   email: 10/11/12
  *               Fede:
  *                 value:
  *                   Username: 11
  *                   Name: Federico
  *                   Lastname: Queirel
  *                   DNI: 4234234
- *                   Birthdate: 10/11/12
+ *                   email: 10/11/12
  *       401:
  *         description: You dont have access
  *       404:
@@ -253,7 +253,7 @@
 *                type: string
 *              user_dni:       
 *                type: integer
-*              user_birthdate: 
+*              user_email: 
 *                type: date
 *              user_route:  
 *                type: string
@@ -346,7 +346,7 @@
 *                type: string
 *              user_dni:       
 *                type: integer
-*              user_birthdate: 
+*              user_email: 
 *                type: date
 *              user_role: 
 *                type: string
@@ -364,7 +364,7 @@
 *              - user_lastname
 *              - user_dni
 *              - user_role
-*              - user_birthdate
+*              - user_email
 *              - user_route
 *              - user_street_number
 *              - user_locality

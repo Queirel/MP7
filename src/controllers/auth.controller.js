@@ -1,7 +1,8 @@
 const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 const jwt = require("jsonwebtoken")
 const { geocode } = require("../helpers/geocode");
-const { user } = require("../models")
+const { user } = require("../models");
+const { createCustomer } = require("../helpers/stripe");
 require('dotenv').config()
 
 // Login
@@ -56,7 +57,7 @@ const signUp = async (req, res) => {
             })
             return res.status(400).json({ "Error": "You are already logged" })
         }
-        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_street_number, user_route, user_locality } = req.body
+        const { user_name, user_dni, user_password, user_realname, user_email, user_lastname, user_street_number, user_route, user_locality } = req.body
         if (!user_name) {
             return res.status(400).json({ "Error": "The username field must be completed" })
         }
@@ -124,8 +125,8 @@ const signUp = async (req, res) => {
             return res.status(400).json({ "Error": "Password must be at least 4 characters" })
         }
 
-        if (!user_birthdate) {
-            return res.status(400).json({ "Error": "The birthdate field must be completed" })
+        if (!user_email) {
+            return res.status(400).json({ "Error": "The email field must be completed" })
         }
 
         if (user_street_number.length > 30) {
@@ -144,13 +145,15 @@ const signUp = async (req, res) => {
         }
 
         const passHash = await passwordHash(user_password)
+        const customerId = await createCustomer(user_name, user_email)
         const newUser = await user.create({
             user_name,
             user_password: passHash,
             user_realname,
-            user_birthdate,
+            user_email,
             user_lastname,
             user_dni,
+            user_customer_id: customerId.id,
             user_address: address.Place
         })
         res.status(200).send({
@@ -159,8 +162,9 @@ const signUp = async (req, res) => {
             "Name": newUser.user_realname,
             "Lastname": newUser.user_lastname,
             "DNI": newUser.user_dni,
-            "Birthdate": newUser.user_birthdate,
-            "Address": address
+            "email": newUser.user_email,
+            "Address": address,
+            "Customer Id": newUser.user_customer_id
         })
     }
     catch (error) {
@@ -172,7 +176,7 @@ const signUp = async (req, res) => {
 // Register ---> Create User By Admin (with roles)
 const signUpAdmin = async (req, res) => {
     try {
-        const { user_name, user_dni, user_password, user_realname, user_birthdate, user_lastname, user_role, user_street_number, user_route, user_locality } = req.body
+        const { user_name, user_dni, user_password, user_realname, user_email, user_lastname, user_role, user_street_number, user_route, user_locality } = req.body
         if (!user_name) {
             return res.status(400).json({ "Error": "The username field must be completed" })
         }
@@ -240,8 +244,8 @@ const signUpAdmin = async (req, res) => {
             return res.status(400).json({ "Error": "Password must be at least 4 characters" })
         }
 
-        if (!user_birthdate) {
-            return res.status(400).json({ "Error": "The birthdate field must be completed" })
+        if (!user_email) {
+            return res.status(400).json({ "Error": "The email field must be completed" })
         }
 
         if (!user_role) {
@@ -274,7 +278,7 @@ const signUpAdmin = async (req, res) => {
             user_password: passHash,
             user_realname,
             user_role,
-            user_birthdate,
+            user_email,
             user_lastname,
             user_dni,
             user_address: address.Place

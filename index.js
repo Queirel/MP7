@@ -4,6 +4,7 @@ const app = require('./app');
 const port = process.env.PORT || 3000
 const { sequelize } = require('./src/models');
 
+
 // Listen
 app.listen(port, async () => {
     console.log(`Server on port ${port}`)

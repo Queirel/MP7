@@ -6,8 +6,7 @@ const { geocode } = require("../helpers/geocode");
 const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-
-    // User id conditions
+      // User id conditions
     if (/[^0-9]/.test(id)) {
       return res.status(400).json({ Error: "User id must be an integer" });
     }
@@ -24,6 +23,7 @@ const getUserById = async (req, res) => {
   }
 };
 
+
 // Update own User
 const updateOwnUser = async (req, res) => {
   try {
@@ -34,7 +34,7 @@ const updateOwnUser = async (req, res) => {
       user_realname,
       user_lastname,
       user_dni,
-      user_birthdate,
+      user_email,
       user_street_number,
       user_route,
       user_locality,
@@ -118,10 +118,10 @@ const updateOwnUser = async (req, res) => {
       }
       getUser_dni = user_dni;
     }
-    if (!user_birthdate) {
-      getUser_birthdate = getUser.dataValues.user_birthdate;
+    if (!user_email) {
+      getUser_email = getUser.dataValues.user_email;
     } else {
-      getUser_birthdate = user_birthdate;
+      getUser_email = user_email;
     }
     if (!user_street_number && !user_route && !user_locality) {
       getUser_address = getUser.dataValues.user_address;
@@ -166,7 +166,7 @@ const updateOwnUser = async (req, res) => {
         user_realname: getUser_realname,
         user_lastname: getUser_lastname,
         user_dni: getUser_dni,
-        user_birthdate: getUser_birthdate,
+        user_email: getUser_email,
         user_address: getUser_address,
       },
       { where: { id } }
@@ -177,7 +177,7 @@ const updateOwnUser = async (req, res) => {
       Name: getUser_realname,
       Lastname: getUser_lastname,
       DNI: getUser_dni,
-      Birthdate: getUser_birthdate,
+      email: getUser_email,
       Address: address,
     });
   } catch (error) {

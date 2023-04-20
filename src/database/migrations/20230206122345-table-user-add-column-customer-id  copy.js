@@ -5,9 +5,9 @@ module.exports = {
   // ----------- Add colum to products table (image)
   up: async (queryInterface, Sequelize) => {
     
-     await queryInterface.addColumn('products','prod_image',{
+     await queryInterface.addColumn('users','user_customer_id',{
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: false
     }
     );
   },
@@ -17,8 +17,8 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
   
-    await queryInterface.removeColumn('products',
-    'prod_image');
+    await queryInterface.removeColumn('users',
+    'user_customer_id');
     
   }
 };

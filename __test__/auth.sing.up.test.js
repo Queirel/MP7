@@ -26,7 +26,7 @@ describe("DATABASE INIT", () => {
             user_realname: "Fede",
             user_lastname: "lastname",
             user_dni: 12345678,
-            user_birthdate: "10/07/1987",
+            user_email: "10/07/1987",
             user_role: "admin"
         });
     });
@@ -39,7 +39,7 @@ describe("DATABASE INIT", () => {
             user_realname: "Fede",
             user_lastname: "lastname",
             user_dni: 12345678,
-            user_birthdate: "10/07/1987",
+            user_email: "10/07/1987",
             user_role: "user"
         });
     });
@@ -82,7 +82,7 @@ describe("🟨 POST /sign/up", () => {
                         user_realname: "name",
                         user_lastname: "lastname",
                         user_dni: 12345678,
-                        user_birthdate: "10/07/1987",
+                        user_email: "10/07/1987",
                     })
                 expect(response.statusCode).toBe(200);
             });
@@ -95,7 +95,7 @@ describe("🟨 POST /sign/up", () => {
                     user_realname: "name",
                     user_lastname: "lastname",
                     user_dni: 12345678,
-                    user_birthdate: "10/07/1987",
+                    user_email: "10/07/1987",
                 }
                 await request(app)
                     .post("/sign/up")
@@ -108,7 +108,7 @@ describe("🟨 POST /sign/up", () => {
                 expect(getUser.user_realname).toBe(User.user_realname)
                 expect(getUser.user_lastname).toBe(User.user_lastname)
                 expect(getUser.user_dni).toBe(User.user_dni)
-                expect(getUser.user_birthdate).toBe(User.user_birthdate)
+                expect(getUser.user_email).toBe(User.user_email)
                 expect(getUser.user_role).toBe('user')
             });
 
@@ -122,7 +122,7 @@ describe("🟨 POST /sign/up", () => {
                         user_realname: "name",
                         user_lastname: "lastname",
                         user_dni: 12345678,
-                        user_birthdate: "10/07/1987",
+                        user_email: "10/07/1987",
                     });
                 expect(response.body.id).toBeDefined();
             });
@@ -137,7 +137,7 @@ describe("🟨 POST /sign/up", () => {
                         user_realname: "name",
                         user_lastname: "lastname",
                         user_dni: 12345678,
-                        user_birthdate: "10/07/1987",
+                        user_email: "10/07/1987",
                     });
                 expect(response.headers["content-type"]).toEqual(
                     expect.stringContaining("json")
@@ -159,7 +159,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "name",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -175,7 +175,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -191,7 +191,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -207,7 +207,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -223,7 +223,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -244,7 +244,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "name",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -260,7 +260,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "nombrefederico",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -276,7 +276,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fed",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -297,7 +297,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -313,7 +313,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "itismylastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -329,7 +329,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "li",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -350,7 +350,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -366,7 +366,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "itismylastname",
                             user_dni: 1234567890,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -382,7 +382,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "li",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -403,7 +403,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -419,7 +419,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -435,7 +435,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -451,7 +451,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(200);
                 });
@@ -467,7 +467,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 1234567890,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -483,7 +483,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(200);
                 });
@@ -504,7 +504,7 @@ describe("🟨 POST /sign/up", () => {
                         { user_realname: "Fede" },
                         { user_lastname: "lastname" },
                         { user_dni: 12345678 },
-                        { user_birthdate: "10/07/1987" },
+                        { user_email: "10/07/1987" },
                         {}
                     ]
                     for (const body of fields) {
@@ -531,7 +531,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "name",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.statusCode).toBe(400)
                     expect(response.body).toEqual({ "Error": "The username alredy exists" })
@@ -548,7 +548,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The username must be only letters and numbers" })
@@ -565,7 +565,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The username must be at least 3 characters" })
@@ -582,7 +582,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The username field must be completed" })
@@ -599,7 +599,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The username must be less than 15 characters" })
@@ -621,7 +621,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fede12",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The name must be only letters" })
@@ -638,7 +638,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The name field must be completed" })
@@ -655,7 +655,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "fd",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The name must be at least 3 letters" })
@@ -672,7 +672,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "thisisthenameoftheuser",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The name must be less than 15 characters" })
@@ -694,7 +694,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "last.name22",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The lastname must be only letters" })
@@ -711,7 +711,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "q",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The lastname must be at least 2 letters" })
@@ -728,7 +728,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The lastname field must be completed" })
@@ -745,7 +745,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "thisisthelastnameoftheuser",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The lastname must be less than 15 characters" })
@@ -767,7 +767,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: "123456ad8",
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "DNI must be an integer" })
@@ -784,7 +784,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 1234567,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "DNI must be at least 8 numbers" })
@@ -801,7 +801,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: "",
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The DNI field must be completed" })
@@ -818,7 +818,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678910,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "DNI must be at most 10 numbers" })
@@ -840,7 +840,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "The password field must be completed" })
@@ -857,7 +857,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "Password must be at most 30 characters" })
@@ -874,7 +874,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         });
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "Password must be at least 4 characters" })
@@ -897,7 +897,7 @@ describe("🟨 POST /sign/up", () => {
                             user_realname: "Fede",
                             user_lastname: "lastname",
                             user_dni: 12345678,
-                            user_birthdate: "10/07/1987",
+                            user_email: "10/07/1987",
                         })
                     expect(response.status).toBe(400)
                     expect(response.body).toEqual({ "Error": "You are already logged" })

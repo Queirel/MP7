@@ -59,7 +59,7 @@
 *                type: string
 *              user_dni:       
 *                type: integer
-*              user_birthdate: 
+*              user_email: 
 *                type: date
 *              user_route:  
 *                type: string
@@ -73,7 +73,7 @@
 *              - user_realname
 *              - user_lastname
 *              - user_dni
-*              - user_birthdate
+*              - user_email
 *              - user_route
 *              - user_street_number
 *              - user_locality
@@ -91,14 +91,14 @@
 *                  Name: Juan
 *                  Lastname: Ignacio
 *                  DNI: 123456
-*                  Birthdate: 10/11/12
+*                  email: 10/11/12
 *              Fede:
 *                value:
 *                  Username: 11
 *                  Name: Federico
 *                  Lastname: Queirel
 *                  DNI: 4234234
-*                  Birthdate: 10/11/12
+*                  email: 10/11/12
 *      403:
 *        description: You are already logged
 *      500:

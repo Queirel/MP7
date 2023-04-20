@@ -2,7 +2,7 @@
 
 module.exports = {
 
-  // ----------- Add colums to users table (real name, lastname, dni, birthdate)
+  // ----------- Add colums to users table (real name, lastname, dni, email)
 
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
@@ -32,7 +32,7 @@ module.exports = {
       ),
       queryInterface.addColumn(
         'users',
-        'user_birthdate',
+        'user_email',
         {
           type: Sequelize.STRING,
           allowNull: false
@@ -49,7 +49,7 @@ module.exports = {
       queryInterface.removeColumn('users', 'user_realname'),
       queryInterface.removeColumn('users', 'user_lastname'),
       queryInterface.removeColumn('users', 'user_dni'),
-      queryInterface.removeColumn('users', 'user_birthdate'),
+      queryInterface.removeColumn('users', 'user_email'),
     ]);
   }
 };
