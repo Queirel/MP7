@@ -1,5 +1,3 @@
-/** @format */
-
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
 const createCustomer = async (name, email) => {
