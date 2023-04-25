@@ -1,5 +1,3 @@
-/** @format */
-
 const { createCharges, addCard } = require("../helpers/stripe");
 const { transaction } = require("../models");
 const { product, user } = require("../models");
@@ -94,7 +92,7 @@ const createTransactionAndStockControl = async (req, res) => {
     const amount = trans_prod_quantity*getProduct.prod_price
     const isPaid = await createCharges(amount, getUser.user_email, cardId, getUser.user_customer_id)
 
-    if (isPaid.status == "succeeded") {
+    if (isPaid.status == "succeeded") {p
       if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
         const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
         const getTransaction = await transaction.create({

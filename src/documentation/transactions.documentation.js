@@ -107,9 +107,24 @@
  *                type: integer
  *              trans_prod_quantity:
  *                type: integer
+ *              cardName:
+ *                type: string
+ *              cardExpYear:
+ *                type: integer
+ *              cardExpMonth:
+ *                type: integer
+ *              cardNumber:
+ *                type: integer
+ *              cardCvc:
+ *                type: integer
  *            required:
  *              - trans_prod_id
  *              - trans_prod_quantity
+ *              - cardName
+ *              - cardExpYear
+ *              - cardExpMonth
+ *              - cardNumber
+ *              - cardCvc
  *    summary: Create a transaction
  *    tags: [Transactions]
  *    responses:
