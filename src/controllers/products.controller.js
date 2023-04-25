@@ -1,7 +1,6 @@
-/** @format */
-
-const { uploadFileS3, getFileURLS3 } = require("../helpers/s3");
+const { uploadFile } = require("../helpers/s3");
 const { product } = require("../models");
+const host = process.env.AWS_BUCKET_HOST
 
 // Get a products
 const getProducts = async (req, res) => {
@@ -14,6 +13,7 @@ const getProducts = async (req, res) => {
         "prod_price",
         "prod_stock",
         "prod_category",
+        "prod_image"
       ],
       where: { prod_published: true },
       //  offset: offset, limit: limit
@@ -51,6 +51,7 @@ const getProductById = async (req, res) => {
         "prod_price",
         "prod_stock",
         "prod_category",
+        "prod_image"
       ],
     });
     if (!getProduct) {
@@ -94,6 +95,7 @@ const getProdByCategory = async (req, res) => {
         "prod_price",
         "prod_stock",
         "prod_category",
+        "prod_image"
       ],
     });
     if (getProducts.length == 0) {
@@ -132,6 +134,7 @@ const getProductByUserId = async (req, res) => {
         "prod_price",
         "prod_stock",
         "prod_category",
+        "prod_image",
       ],
     });
 
@@ -185,17 +188,17 @@ const saveProduct = async (req, res) => {
     if (check_files) {
       getFile = req.files.file;
       if (getFile) {
-        await uploadFileS3(getFile);
-        prod_image = await getFileURLS3(getFile.name);
+        await uploadFile(getFile);
+        prod_image = `${host}/${getFile.name}`;
       } else {
         prod_image =
-          "https://bucket-app-mp.s3.us-east-1.amazonaws.com/noprodimage.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXNhLWVhc3QtMSJIMEYCIQCbfGa2o%2FiKy%2F3zoaIj4Y92YGpHLDhUQjXUmA%2FV27Lu3AIhALxiwuoqojYEC8uXspV0qsNitePPRJQkinB%2BFEDM6zGwKu0CCOT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMMDY4MDQ4NzczNTkxIgyfuVPV8Bkx1f2BcpgqwQIL3wZImKyWvCD%2Fu34xT%2FvjwUpVCUtYiuF57ml8JZBm8oocox68ad13BUUq8iHE4srn7vSoyNVJuJqPVGLP1xvpWeMvzmW%2Fevrwv1tKi0Wjmm%2FI7xK6n%2Fw2m7ZyjeS0itjvic2THvmhowRr%2F8V1fxCCqN5dasYyAd8osY%2B9HCzBI9fb46E0Y55DF%2Ft%2F6mwHxSS6iV7L0U3y8e2N3sr%2B15gprQVUaVAdDbU9qM5aE4FwPV9y9bnWaUa32jxbmn9HJadr5%2F3gIZbI4R06pV52rIA2XM2nrSbizVzecF51VfnYbP4fhWBgjewC9NcgWN6Gz31qXCzOlRxewYtuK2nAvE3v5TZPoduUWlqW08zk63slWFsYy%2BGyrcyC91U4E%2Be5jZDtqHr5edWwM7i45sI%2BfNyxSpKq72O3fp93mxZNvct3Duow3d6XogY6sgLtj%2B0yhZGDP3XY3TPL8MLlVbcwTJ5g0AoMarFy3Z8BSe%2FsFdkeQdcA45P67FurCPL%2FupT1hldYx8Z%2F2dr5StNJohi%2BwNlRd19mQmOCqAhZyvmJGabUHvd6KbgwC1Y05BZJRhdj%2B%2FvG%2F3iV4er1G5Y%2Farces8p1boUMpbYBAQt2gVHOozVWtq6eU7Ddtm%2FHfYnerfMc10k4GXism09KztDkcpwY1sn%2BRj%2FwDPIkvbIS6ScwE76QjvDOJcmVdYZp5KvhKXel9FSvlqW7OrUqIZbhVbSS0moV8JDy%2F2yYwEvSK%2F1uGI7GeSylrcgBEG2Kb2h1Numkw5jcazmm4M0ArIn1mZs1y%2BAiSt1ti9LUMu0Y2SxBX6BHpBCqv4AqT8Z7LcOANWJQUsAvC0wKGCulIrjYZ3Y%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230424T075004Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ7WAF4HLYM52NBUX%2F20230424%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9f8a1f193cfc1b4f737bc1568de15883cd42da2baabd0e05f7315359ee7e17fe";
+          `${host}/noprodimage.jpg`
       }
     }
 
     if (!check_files) {
       prod_image =
-        "https://bucket-app-mp.s3.us-east-1.amazonaws.com/noprodimage.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXNhLWVhc3QtMSJIMEYCIQCbfGa2o%2FiKy%2F3zoaIj4Y92YGpHLDhUQjXUmA%2FV27Lu3AIhALxiwuoqojYEC8uXspV0qsNitePPRJQkinB%2BFEDM6zGwKu0CCOT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMMDY4MDQ4NzczNTkxIgyfuVPV8Bkx1f2BcpgqwQIL3wZImKyWvCD%2Fu34xT%2FvjwUpVCUtYiuF57ml8JZBm8oocox68ad13BUUq8iHE4srn7vSoyNVJuJqPVGLP1xvpWeMvzmW%2Fevrwv1tKi0Wjmm%2FI7xK6n%2Fw2m7ZyjeS0itjvic2THvmhowRr%2F8V1fxCCqN5dasYyAd8osY%2B9HCzBI9fb46E0Y55DF%2Ft%2F6mwHxSS6iV7L0U3y8e2N3sr%2B15gprQVUaVAdDbU9qM5aE4FwPV9y9bnWaUa32jxbmn9HJadr5%2F3gIZbI4R06pV52rIA2XM2nrSbizVzecF51VfnYbP4fhWBgjewC9NcgWN6Gz31qXCzOlRxewYtuK2nAvE3v5TZPoduUWlqW08zk63slWFsYy%2BGyrcyC91U4E%2Be5jZDtqHr5edWwM7i45sI%2BfNyxSpKq72O3fp93mxZNvct3Duow3d6XogY6sgLtj%2B0yhZGDP3XY3TPL8MLlVbcwTJ5g0AoMarFy3Z8BSe%2FsFdkeQdcA45P67FurCPL%2FupT1hldYx8Z%2F2dr5StNJohi%2BwNlRd19mQmOCqAhZyvmJGabUHvd6KbgwC1Y05BZJRhdj%2B%2FvG%2F3iV4er1G5Y%2Farces8p1boUMpbYBAQt2gVHOozVWtq6eU7Ddtm%2FHfYnerfMc10k4GXism09KztDkcpwY1sn%2BRj%2FwDPIkvbIS6ScwE76QjvDOJcmVdYZp5KvhKXel9FSvlqW7OrUqIZbhVbSS0moV8JDy%2F2yYwEvSK%2F1uGI7GeSylrcgBEG2Kb2h1Numkw5jcazmm4M0ArIn1mZs1y%2BAiSt1ti9LUMu0Y2SxBX6BHpBCqv4AqT8Z7LcOANWJQUsAvC0wKGCulIrjYZ3Y%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230424T075004Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ7WAF4HLYM52NBUX%2F20230424%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9f8a1f193cfc1b4f737bc1568de15883cd42da2baabd0e05f7315359ee7e17fe";
+      `${host}/noprodimage.jpg`
     }
 
     // Stock conditions
@@ -289,16 +292,18 @@ const updateProduct = async (req, res) => {
     if (check_files) {
       getFile = req.files.file;
       if (getFile) {
-        await uploadFileS3(getFile);
-        prod_image = await getFileURLS3(getFile.name);
+        await uploadFile(getFile);
+        prod_image = `${host}/${getFile.name}`;
       } else {
-        prod_image = getProduct.prod_image;
+        prod_image =
+          `${host}/noprodimage.jpg`
       }
     }
 
     if (!check_files) {
       prod_image = getProduct.prod_image;
     }
+
     // If empty field
     if (!prod_name) {
       getProd_name = getProduct.dataValues.prod_name;
