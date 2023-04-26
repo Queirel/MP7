@@ -79,41 +79,6 @@
  *         description: An unexpected error occurred. please try again later
  */
 
-/**
- * @swagger
- * /admin/transactions:
- *  post:
- *    description: Create a transaction (with user id and if its cancelled)
- *    requestBody:
- *      required: true
- *      content:
- *        application/x-www-form-urlencoded:
- *          schema:
- *            type: object
- *            properties:
- *              trans_prod_id:
- *                type: integer
- *              trans_buy_user_id:
- *                type: integer
- *              trans_prod_quantity:
- *                type: integer
- *              trans_cancel:
- *                type: boolean
- *            required:
- *              - trans_prod_id
- *              - trans_buy_user_id
- *              - trans_prod_quantity
- *              - trans_cancel
- *    summary: Create a transaction
- *    tags: [Admin]
- *    responses:
- *      200:
- *        description: The transaction was created
- *      403:
- *        description: You must be logged
- *      500:
- *        description: An unexpected error occurred. please try again later
- */
 
 /**
  * @swagger
@@ -123,7 +88,7 @@
  *    requestBody:
  *      required: true
  *      content:
- *        application/x-www-form-urlencoded:
+ *        multipart/form-data:
  *          schema:
  *            type: object
  *            properties:
@@ -140,6 +105,9 @@
  *                type: integer
  *              prod_published: 
  *                type: boolean
+ *              file:     
+ *                type: string
+ *                format: binary
  *            required:
  *              - prod_name
  *              - prod_price
@@ -174,7 +142,7 @@
  *        description: The product id
  *    requestBody:
  *      content:
- *        application/x-www-form-urlencoded:
+ *        multipart/form-data:
  *          schema:
  *            type: object
  *            properties:
@@ -189,6 +157,9 @@
  *                type: boolean
  *              prod_user_id:  
  *                type: integer
+*              file:     
+ *                type: string
+ *                format: binary
  *    summary: Update a product by id
  *    tags: [Admin]
  *    responses:
@@ -411,3 +382,41 @@
  *      500:
  *        description: An unexpected error occurred. please try again later
  */
+
+
+
+// /**
+//  * @swagger
+//  * /admin/transactions:
+//  *  post:
+//  *    description: Create a transaction (with user id and if its cancelled)
+//  *    requestBody:
+//  *      required: true
+//  *      content:
+//  *        application/x-www-form-urlencoded:
+//  *          schema:
+//  *            type: object
+//  *            properties:
+//  *              trans_prod_id:
+//  *                type: integer
+//  *              trans_buy_user_id:
+//  *                type: integer
+//  *              trans_prod_quantity:
+//  *                type: integer
+//  *              trans_cancel:
+//  *                type: boolean
+//  *            required:
+//  *              - trans_prod_id
+//  *              - trans_buy_user_id
+//  *              - trans_prod_quantity
+//  *              - trans_cancel
+//  *    summary: Create a transaction
+//  *    tags: [Admin]
+//  *    responses:
+//  *      200:
+//  *        description: The transaction was created
+//  *      403:
+//  *        description: You must be logged
+//  *      500:
+//  *        description: An unexpected error occurred. please try again later
+//  */

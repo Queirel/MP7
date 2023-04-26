@@ -63,99 +63,99 @@ const getAllTransactionsAdmin = async (req, res) => {
   }
 };
 
-// Create Transaction for any user
-const saveTransactionAdminStockControl = async (req, res) => {
-  try {
-    const {
-      trans_prod_id,
-      trans_prod_quantity,
-      trans_cancel,
-      trans_buy_user_id,
-    } = req.body;
+// // Create Transaction for any user
+// const saveTransactionAdminStockControl = async (req, res) => {
+//   try {
+//     const {
+//       trans_prod_id,
+//       trans_prod_quantity,
+//       trans_cancel,
+//       trans_buy_user_id,
+//     } = req.body;
 
-    if (/[^0-9]/.test(trans_prod_quantity)) {
-      return res.status(400).json({ Error: "Quantity must be an integer" });
-    }
-    if (trans_prod_quantity < 1) {
-      return res.status(400).json({ Error: "Quantity must be more than 0" });
-    }
-    if (trans_prod_quantity >= 100) {
-      return res.status(400).json({ Error: "Quantity must be less than 100" });
-    }
-    if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
-      return res.status(400).json({ Error: "Quantity exceeds stock" });
-    }
-    if (/[^0-9]/.test(trans_prod_id)) {
-      return res.status(400).json({ Error: "Product id must be an integer" });
-    }
-    const getUser = await user.findOne({ where: { id: trans_buy_user_id } });
-    if (!getUser) {
-      return res.status(400).json({ Error: "User does not exists" });
-    }
-    const getProduct = await product.findOne({ where: { id: trans_prod_id } });
-    if (!getProduct) {
-      return res.status(400).json({ Error: "Product does not exists" });
-    }
-    if (/[^0-9]/.test(trans_buy_user_id)) {
-      return res.status(400).json({ Error: "User id must be an integer" });
-    }
-    const prod_user_id = getProduct.prod_user_id;
-    if (trans_buy_user_id == prod_user_id) {
-      return res.status(400).json({ Error: "Seller cant buy his own product" });
-    }
-    if (!getProduct.dataValues.prod_published) {
-      return res.status(400).json({ Error: "You cant buy a paused product" });
-    }
-    if (!typeof trans_cancel == "boolean") {
-      return res
-        .status(400)
-        .json({ Error: "transaction cancel must be a boolean" });
-    }
-    if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
-      const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
-      const getTransaction = await transaction.create({
-        trans_cancel,
-        trans_prod_id,
-        trans_prod_quantity,
-        trans_buy_user_id,
-      });
-      await product.update(
-        {
-          prod_published: false,
-          prod_stock: NewStock,
-        },
-        { where: { id: trans_prod_id } }
-      );
-      return res.status(200).json({
-        Message: "Out of stock, product paused",
-        Transaction: getTransaction,
-      });
-    }
-    const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
-    console.log(NewStock);
-    const getTransaction = await transaction.create({
-      trans_cancel,
-      trans_prod_id,
-      trans_prod_quantity,
-      trans_buy_user_id,
-    });
-    await product.update(
-      {
-        prod_stock: NewStock,
-      },
-      { where: { id: trans_prod_id } }
-    );
-    res.status(200).json({
-      "Remaining product quantity": NewStock,
-      Transaction: getTransaction,
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ Error: "An unexpected error occurred. please try again later" });
-    console.log(error.message);
-  }
-};
+//     if (/[^0-9]/.test(trans_prod_quantity)) {
+//       return res.status(400).json({ Error: "Quantity must be an integer" });
+//     }
+//     if (trans_prod_quantity < 1) {
+//       return res.status(400).json({ Error: "Quantity must be more than 0" });
+//     }
+//     if (trans_prod_quantity >= 100) {
+//       return res.status(400).json({ Error: "Quantity must be less than 100" });
+//     }
+//     if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
+//       return res.status(400).json({ Error: "Quantity exceeds stock" });
+//     }
+//     if (/[^0-9]/.test(trans_prod_id)) {
+//       return res.status(400).json({ Error: "Product id must be an integer" });
+//     }
+//     const getUser = await user.findOne({ where: { id: trans_buy_user_id } });
+//     if (!getUser) {
+//       return res.status(400).json({ Error: "User does not exists" });
+//     }
+//     const getProduct = await product.findOne({ where: { id: trans_prod_id } });
+//     if (!getProduct) {
+//       return res.status(400).json({ Error: "Product does not exists" });
+//     }
+//     if (/[^0-9]/.test(trans_buy_user_id)) {
+//       return res.status(400).json({ Error: "User id must be an integer" });
+//     }
+//     const prod_user_id = getProduct.prod_user_id;
+//     if (trans_buy_user_id == prod_user_id) {
+//       return res.status(400).json({ Error: "Seller cant buy his own product" });
+//     }
+//     if (!getProduct.dataValues.prod_published) {
+//       return res.status(400).json({ Error: "You cant buy a paused product" });
+//     }
+//     if (!typeof trans_cancel == "boolean") {
+//       return res
+//         .status(400)
+//         .json({ Error: "transaction cancel must be a boolean" });
+//     }
+//     if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
+//       const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
+//       const getTransaction = await transaction.create({
+//         trans_cancel,
+//         trans_prod_id,
+//         trans_prod_quantity,
+//         trans_buy_user_id,
+//       });
+//       await product.update(
+//         {
+//           prod_published: false,
+//           prod_stock: NewStock,
+//         },
+//         { where: { id: trans_prod_id } }
+//       );
+//       return res.status(200).json({
+//         Message: "Out of stock, product paused",
+//         Transaction: getTransaction,
+//       });
+//     }
+//     const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
+//     console.log(NewStock);
+//     const getTransaction = await transaction.create({
+//       trans_cancel,
+//       trans_prod_id,
+//       trans_prod_quantity,
+//       trans_buy_user_id,
+//     });
+//     await product.update(
+//       {
+//         prod_stock: NewStock,
+//       },
+//       { where: { id: trans_prod_id } }
+//     );
+//     res.status(200).json({
+//       "Remaining product quantity": NewStock,
+//       Transaction: getTransaction,
+//     });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ Error: "An unexpected error occurred. please try again later" });
+//     console.log(error.message);
+//   }
+// };
 
 // Save a product
 const saveProductAdmin = async (req, res) => {
@@ -168,6 +168,24 @@ const saveProductAdmin = async (req, res) => {
       prod_published,
       prod_user_id,
     } = req.body;
+    const check_files = req.files;
+    var prod_image;
+
+    if (check_files) {
+      getFile = req.files.file;
+      if (getFile) {
+        await uploadFile(getFile);
+        prod_image = `${host}/${getFile.name}`;
+      } else {
+        prod_image =
+          `${host}/noprodimage.jpg`
+      }
+    }
+
+    if (!check_files) {
+      prod_image =
+      `${host}/noprodimage.jpg`
+    }
 
     // published conditions
     if (!typeof prod_published == "boolean") {
@@ -243,6 +261,7 @@ const saveProductAdmin = async (req, res) => {
       prod_stock,
       prod_category,
       prod_published,
+      prod_image,
     });
     res.status(200).json({ Product: saveProduct });
   } catch (error) {
@@ -272,6 +291,23 @@ const updateProductAdmin = async (req, res) => {
       prod_published,
       // prod_stock,
     } = req.body;
+    const check_files = req.files;
+    var prod_image;
+
+    if (check_files) {
+      getFile = req.files.file;
+      if (getFile) {
+        await uploadFile(getFile);
+        prod_image = `${host}/${getFile.name}`;
+      } else {
+        prod_image =
+          `${host}/noprodimage.jpg`
+      }
+    }
+
+    if (!check_files) {
+      prod_image = getProduct.prod_image;
+    }
 
     // published conditions
     if (!typeof prod_published == "boolean") {
@@ -377,6 +413,7 @@ const updateProductAdmin = async (req, res) => {
         prod_user_id: getProd_user_id,
         prod_published: getProd_published,
         // prod_stock: getProd_stock,
+        prod_image: prod_image,
       },
       {
         where: { id: product_id },
@@ -390,6 +427,7 @@ const updateProductAdmin = async (req, res) => {
       "User owner": getProd_user_id,
       "Product category": getProd_category,
       "Product published": getProd_published,
+      "Product image": prod_image,
     });
   } catch (error) {
     res
@@ -698,7 +736,7 @@ module.exports = {
   getAllUsersAdmin,
   getUserByIdAdmin,
   getAllTransactionsAdmin,
-  saveTransactionAdminStockControl,
+  // saveTransactionAdminStockControl,
   saveProductAdmin,
   updateProductAdmin,
   updateUserByIdAdmin,

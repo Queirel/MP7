@@ -159,9 +159,6 @@
  *          schema:
  *            type: object
  *            properties:
- *              file:     
- *                type: string
- *                format: binary
  *              prod_name:     
  *                type: string
  *              prod_price:  
@@ -171,6 +168,9 @@
  *              prod_category: 
  *                type: string
  *                enum: [agro,fashion,food,home,tecnology,tools,toys]
+ *              file:     
+ *                type: string
+ *                format: binary
  *            required:
  *              - prod_name
  *              - prod_price
@@ -203,7 +203,7 @@
  *        description: The product id
  *    requestBody:
  *      content:
- *        application/x-www-form-urlencoded:
+ *        multipart/form-data:
  *          schema:
  *            type: object
  *            properties:
@@ -218,6 +218,9 @@
  *                enum: [agro,fashion,food,home,tecnology,tools,toys]
  *              prod_published:  
  *                type: boolean
+ *              file:     
+ *                type: string
+ *                format: binary
  *    summary: Update a product by id
  *    tags: [Products]
  *    responses:

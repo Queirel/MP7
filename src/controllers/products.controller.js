@@ -330,7 +330,7 @@ const updateProduct = async (req, res) => {
       getProd_price = getProduct.dataValues.prod_price;
     } else {
       // Price conditions
-      if (/[^0-9]/.test(prod_stock)) {
+      if (/[^0-9]/.test(prod_price)) {
         return res.status(400).json({ Error: "Price must be an integer" });
       }
       if (prod_price <= 0) {
