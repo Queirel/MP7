@@ -18,7 +18,7 @@ Frameworks
 - ORM: Migrations✅
 `- Testing: Jest` ✅
 - Documentation: Swagger✅
-`- Obserbability: `
+`- : `
 `- Dependency Injection:`
 
 Infrastructure

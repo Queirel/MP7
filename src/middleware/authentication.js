@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const logger = require("../helpers/logger")
 
 const authentication = (req, res, next) => {
     try {
@@ -11,6 +12,7 @@ const authentication = (req, res, next) => {
                 }
                     else {
                         req.user = payload
+                        // logger.info(`User ${req.user.id} (${req.user.user_role}) authenticated successfully`)
                         next()
                 }
             })
@@ -20,7 +22,8 @@ const authentication = (req, res, next) => {
         }
      }
     catch (error) {
-        res.status(500).json({ error })
+        logger.error(`middl-authentication - Error (500): ${error.message}`)
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
     }
 }
 

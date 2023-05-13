@@ -1,7 +1,7 @@
-
+require('dotenv').config()
 const { S3Client, PutObjectCommand, GetObjectCommand } =require(  '@aws-sdk/client-s3')
 const fs =require( 'fs')
-require('dotenv').config()
+
 
 AWS_BUCKET_NAME=process.env.AWS_BUCKET_NAME
 AWS_BUCKET_REGION=process.env.AWS_BUCKET_REGION

@@ -43,10 +43,10 @@ module.exports = (sequelize, DataTypes) => {
       user_email: {
         type: DataTypes.STRING,
         allowNull: false,
-        isUnique: true,
-        validate: {
-          isEmail: true,
-        },
+        // isUnique: true,
+        // validate: {
+        //   isEmail: true,
+        // },
       },
       user_customer_id: {
         type: DataTypes.STRING,

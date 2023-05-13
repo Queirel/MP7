@@ -19,7 +19,7 @@
     "username": "postgres",
     "password": "password",
     "database": "marketplace",
-    "host": "marketplace.cfsqdxhswlac.us-east-1.rds.amazonaws.com",
+    "host": "localhost",
     "dialect": "postgres",
     "logging":false
   }

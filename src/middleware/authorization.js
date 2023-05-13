@@ -1,13 +1,15 @@
+require('dotenv').config()
+const logger = require("../helpers/logger");
 const { product } = require("../models");
 const { transaction } = require("../models");
-const { user } = require("../models");
-require('dotenv').config()
+// const { user } = require("../models");
 
 // Is admin
 const isAdmin = (req, res, next) => {
     try {
         const user_role = req.user.user_role
         if (user_role == 'admin') {
+            // logger.info(`User ${req.user.id} (Admin) authenticated successfully`)
             next()
         }
         else {
@@ -15,6 +17,7 @@ const isAdmin = (req, res, next) => {
         }
     }
     catch (error) {
+        logger.error(`middl-isAdmin - Error (500): ${error.message}`)
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }
@@ -43,6 +46,7 @@ const isUserProduct = async (req, res, next) => {
 
     }
     catch (error) {
+        logger.error(`middl-isUserProduct - Error (500): ${error.message}`)
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }
@@ -68,6 +72,7 @@ const isUserTransaction = async (req, res, next) => {
         }
     }
     catch (error) {
+        logger.error(`middl-isUserTransaction - Error (500): ${error.message}`)
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }

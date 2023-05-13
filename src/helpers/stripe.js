@@ -1,4 +1,6 @@
-const stripe = require("stripe")(process.env.STRIPE_SK);
+require('dotenv').config()
+const Stripe = require("stripe");
+const stripe = Stripe(process.env.STRIPE_SK)
 
 const createCustomer = async (name, email) => {
   const customer = await stripe.customers.create({

@@ -1,5 +1,6 @@
 const { uploadFile } = require("../helpers/s3");
 const { product } = require("../models");
+const logger = require("../helpers/logger");
 const host = process.env.AWS_BUCKET_HOST
 
 // Get a products
@@ -18,8 +19,10 @@ const getProducts = async (req, res) => {
       where: { prod_published: true },
       //  offset: offset, limit: limit
     });
+    // logger.info(`get/products - (getted all products)`)
     res.status(200).json({ Products: getProds });
   } catch (error) {
+    logger.error(`get/products - (getting all products) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -57,8 +60,10 @@ const getProductById = async (req, res) => {
     if (!getProduct) {
       return res.status(400).json({ Error: "Product does not exist" });
     }
+    // logger.info(`get/products/:id - (getted product ${req.params.id})`)
     res.status(200).json({ Product: getProduct });
   } catch (error) {
+    logger.error(`get/products/:id - (getting product ${req.params.id}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -99,6 +104,7 @@ const getProdByCategory = async (req, res) => {
       ],
     });
     if (getProducts.length == 0) {
+      // logger.info(`get/products/category/:category - (getted products by category: ${req.params.category})`)
       return res
         .status(200)
         .json({ Message: "There is no products from that category" });
@@ -106,6 +112,7 @@ const getProdByCategory = async (req, res) => {
 
     res.status(200).json({ Product: getProducts });
   } catch (error) {
+    logger.error(`get/products/category/:category - (getting products by category: ${req.params.category}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -143,9 +150,10 @@ const getProductByUserId = async (req, res) => {
         .status(200)
         .json({ Message: "There is no products from the user" });
     }
-
+    // logger.info(`get/products/user/:id - (getted products by user id: ${req.params.id})`)
     res.status(200).json({ Products: getProducts });
   } catch (error) {
+    logger.error(`get/products/user/:id - (getting products by user id: ${req.params.id}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -263,6 +271,7 @@ const saveProduct = async (req, res) => {
       prod_category,
       prod_image,
     });
+    logger.info(`post/products - (created product ${saveProduct.id} by user ${req.user.id})`)
     res.status(200).json({
       Product: prod_name,
       User: user_id,
@@ -272,6 +281,7 @@ const saveProduct = async (req, res) => {
       Image: prod_image,
     });
   } catch (error) {
+    logger.error(`post/products - (creating a product by user ${req.user.id}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -283,7 +293,7 @@ const saveProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const product_id = req.params.id;
-    const getProduct = await product.findOne({ where: { id: product_id } });
+    var getProduct = await product.findOne({ where: { id: product_id } });
     const { prod_name, prod_price, prod_stock, prod_category, prod_published } =
       req.body;
     const check_files = req.files;
@@ -397,7 +407,7 @@ const updateProduct = async (req, res) => {
         where: { id: product_id },
       }
     );
-
+    logger.info(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id})`)
     // response
     res.status(200).json({
       Id: product_id,
@@ -409,6 +419,7 @@ const updateProduct = async (req, res) => {
       "Product image": prod_image,
     });
   } catch (error) {
+    logger.error(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -430,10 +441,11 @@ const deleteProduct = async (req, res) => {
     // if (!getProduct) {
     //     return res.status(400).json({ "Error": "Product does not exists" })
     // }
-
+    logger.info(`delete/products/:id - (deleting product ${req.params.id})`)
     await product.destroy({ where: { id } });
     res.status(200).json({ Message: `Product ${id} deleted` });
   } catch (error) {
+    logger.error(`delete/products/:id - (deleting product ${req.params.id}) - Error(500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });

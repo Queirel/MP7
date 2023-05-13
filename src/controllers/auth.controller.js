@@ -1,9 +1,10 @@
+require('dotenv').config()
 const { passwordHash, passwordCompare } = require("../helpers/bcrypt")
 const jwt = require("jsonwebtoken")
-const { geocode } = require("../helpers/geocode");
+const logger = require("../helpers/logger");
 const { user } = require("../models");
+const { geocode } = require("../helpers/geocode");
 const { createCustomer } = require("../helpers/stripe");
-require('dotenv').config()
 
 // Login
 const signIn = async (req, res) => {
@@ -35,10 +36,12 @@ const signIn = async (req, res) => {
             if (error) {
                 return res.status(400).json(`Error while procesing token ${error}`)
             }
+            logger.info(`/sign/in - User ${getuser.id} logged in`)
             return res.status(200).json({ token })
         })
     }
     catch (error) {
+        logger.error(`/sign/in - Error (500): ${error.message}`)
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }
@@ -156,8 +159,9 @@ const signUp = async (req, res) => {
             user_customer_id: customerId.id,
             user_address: address.Place
         })
+        logger.info(`/sign/up - User ${newUser.dataValues.id} created successfully`)
         res.status(200).send({
-            id: newUser.id,
+            id: newUser.user_id,
             "User name": newUser.user_name,
             "Name": newUser.user_realname,
             "Lastname": newUser.user_lastname,
@@ -168,6 +172,7 @@ const signUp = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`/sign/up - Error (500): ${error.message}`)
         res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
         console.log(error.message)
     }
@@ -273,6 +278,7 @@ const signUpAdmin = async (req, res) => {
         }
 
         const passHash = await passwordHash(user_password)
+        const customerId = await createCustomer(user_name, user_email)
         const newUser = await user.create({
                 user_name,
             user_password: passHash,
@@ -281,12 +287,15 @@ const signUpAdmin = async (req, res) => {
             user_email,
             user_lastname,
             user_dni,
-            user_address: address.Place
+            user_address: address.Place,
+            user_customer_id: customerId.id,
         })
+        logger.info(`/admin/sign/up - User ${newUser.dataValues.id} created successfully by user ${req.user.id}`)
         res.status(200).json( newUser.dataValues )
     }
     catch (error) {
-        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" })
+        logger.error(`/admin/sign/up - Error (500): ${error.message}`)
+        res.status(500).json({ "Error": "An unexpected error occurred. please try again later" }).json({error})
         console.log(error.message)
     }
 }

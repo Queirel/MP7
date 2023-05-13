@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for MP7/src/routes/products.routes.js</title>
+    <title>Code coverage report for MP7/src/helpers/geocode.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">MP7/src/routes</a> products.routes.js</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">MP7/src/helpers</a> geocode.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -77,35 +77,47 @@
 <a name='L12'></a><a href='#L12'>12</a>
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
-<a name='L15'></a><a href='#L15'>15</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span></td><td class="text"><pre class="prettyprint lang-js">const { Router } = require("express")
-const { getProducts, saveProduct, getProductById, updateProduct, deleteProduct, getProdByCategory, getProductByUserId } = require("../controllers/products.controller")
-const { isUserProduct } = require("../middleware/authorization")
-const authentication = require("../middleware/authentication")
-const router = Router()
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span></td><td class="text"><pre class="prettyprint lang-js">const axios = require("axios");
 &nbsp;
-router.get('/', getProducts)
-router.get('/:id', getProductById)
-router.get('/user/:id', getProductByUserId)
-router.get('/category/:category', getProdByCategory)
-router.post('/', authentication, saveProduct)
-router.put('/:id', authentication, isUserProduct, updateProduct)
-router.delete('/:id', authentication, isUserProduct, deleteProduct)
+const geocode = async (address) =&gt; {
+  const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&amp;key=${process.env.MAPS_API_KEY}`);
+  <span class="missing-if-branch" title="if path not taken" >I</span>if ( result.data.status == "ZERO_RESULTS"){
+<span class="cstat-no" title="statement not covered" >    return "Error"</span>
+  }
+  const place_id = result.data.results[0].place_id;
 &nbsp;
-module.exports = router</pre></td></tr></table></pre>
+  const resultPlace = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&amp;key=${process.env.MAPS_API_KEY}`);
+  const maps = resultPlace.data.result.url;
+&nbsp;
+  return {
+    "Place": place_id,
+    "Map": maps,
+  };
+};
+&nbsp;
+module.exports = { geocode };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

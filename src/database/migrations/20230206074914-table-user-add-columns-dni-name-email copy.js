@@ -22,10 +22,10 @@ module.exports = {
       queryInterface.addColumn("users", "user_email", {
         type: Sequelize.STRING,
         allowNull: false,
-        isUnique: true,
-        validate: {
-          isEmail: true,
-        },
+        // isUnique: true,
+        // validate: {
+        //   isEmail: true,
+        // },
       }),
     ]);
   },

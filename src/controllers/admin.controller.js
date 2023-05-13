@@ -1,10 +1,11 @@
-/** @format */
-
 const { passwordHash } = require("../helpers/bcrypt");
 const { transaction } = require("../models");
 const { user } = require("../models");
 const { product } = require("../models");
 const { geocode } = require("../helpers/geocode");
+const logger = require("../helpers/logger");
+const host = process.env.AWS_BUCKET_HOST
+
 
 // Get user by id
 const getUserByIdAdmin = async (req, res) => {
@@ -17,8 +18,10 @@ const getUserByIdAdmin = async (req, res) => {
     if (!getUser) {
       return res.status(400).json({ Error: "User does not exists" });
     }
+    logger.info(`get/admin/users/:id - (User ${req.user.id} got user ${req.params.id})`)
     res.status(200).json({ User: getUser });
   } catch (error) {
+    logger.error(`get/admin/users/:id - (User ${req.user.id} getting user ${req.params.id}) -  Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -34,8 +37,10 @@ const getAllUsersAdmin = async (req, res) => {
     if (getUsers.length == 0) {
       return res.status(400).json({ Error: "There are no users" });
     }
+    logger.info(`get/admin/users - (User ${req.user.id} got all users)`)
     res.status(200).json({ Users: getUsers });
   } catch (error) {
+    logger.error(`get/admin/users - (User ${req.user.id} getting all users) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -54,108 +59,16 @@ const getAllTransactionsAdmin = async (req, res) => {
     if (getTransactions.length == 0) {
       return res.status(400).json({ Error: "There are no transactions" });
     }
+    logger.info(`Getting all transactions (Admin)`)
     res.status(200).json({ Transactions: getTransactions });
   } catch (error) {
+    logger.error(`get/admin/transactions - (User ${req.user.id} getting all transactions) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
     console.log(error.message);
   }
 };
-
-// // Create Transaction for any user
-// const saveTransactionAdminStockControl = async (req, res) => {
-//   try {
-//     const {
-//       trans_prod_id,
-//       trans_prod_quantity,
-//       trans_cancel,
-//       trans_buy_user_id,
-//     } = req.body;
-
-//     if (/[^0-9]/.test(trans_prod_quantity)) {
-//       return res.status(400).json({ Error: "Quantity must be an integer" });
-//     }
-//     if (trans_prod_quantity < 1) {
-//       return res.status(400).json({ Error: "Quantity must be more than 0" });
-//     }
-//     if (trans_prod_quantity >= 100) {
-//       return res.status(400).json({ Error: "Quantity must be less than 100" });
-//     }
-//     if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
-//       return res.status(400).json({ Error: "Quantity exceeds stock" });
-//     }
-//     if (/[^0-9]/.test(trans_prod_id)) {
-//       return res.status(400).json({ Error: "Product id must be an integer" });
-//     }
-//     const getUser = await user.findOne({ where: { id: trans_buy_user_id } });
-//     if (!getUser) {
-//       return res.status(400).json({ Error: "User does not exists" });
-//     }
-//     const getProduct = await product.findOne({ where: { id: trans_prod_id } });
-//     if (!getProduct) {
-//       return res.status(400).json({ Error: "Product does not exists" });
-//     }
-//     if (/[^0-9]/.test(trans_buy_user_id)) {
-//       return res.status(400).json({ Error: "User id must be an integer" });
-//     }
-//     const prod_user_id = getProduct.prod_user_id;
-//     if (trans_buy_user_id == prod_user_id) {
-//       return res.status(400).json({ Error: "Seller cant buy his own product" });
-//     }
-//     if (!getProduct.dataValues.prod_published) {
-//       return res.status(400).json({ Error: "You cant buy a paused product" });
-//     }
-//     if (!typeof trans_cancel == "boolean") {
-//       return res
-//         .status(400)
-//         .json({ Error: "transaction cancel must be a boolean" });
-//     }
-//     if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
-//       const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
-//       const getTransaction = await transaction.create({
-//         trans_cancel,
-//         trans_prod_id,
-//         trans_prod_quantity,
-//         trans_buy_user_id,
-//       });
-//       await product.update(
-//         {
-//           prod_published: false,
-//           prod_stock: NewStock,
-//         },
-//         { where: { id: trans_prod_id } }
-//       );
-//       return res.status(200).json({
-//         Message: "Out of stock, product paused",
-//         Transaction: getTransaction,
-//       });
-//     }
-//     const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
-//     console.log(NewStock);
-//     const getTransaction = await transaction.create({
-//       trans_cancel,
-//       trans_prod_id,
-//       trans_prod_quantity,
-//       trans_buy_user_id,
-//     });
-//     await product.update(
-//       {
-//         prod_stock: NewStock,
-//       },
-//       { where: { id: trans_prod_id } }
-//     );
-//     res.status(200).json({
-//       "Remaining product quantity": NewStock,
-//       Transaction: getTransaction,
-//     });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ Error: "An unexpected error occurred. please try again later" });
-//     console.log(error.message);
-//   }
-// };
 
 // Save a product
 const saveProductAdmin = async (req, res) => {
@@ -219,7 +132,7 @@ const saveProductAdmin = async (req, res) => {
     if (prod_price <= 0) {
       return res.status(400).json({ Error: "Price must be more than 0" });
     }
-    if (prod_price > 1000) {
+    if (prod_price > 100000) {
       return res.status(400).json({ Error: "Price must be less than 100000" });
     }
 
@@ -263,8 +176,10 @@ const saveProductAdmin = async (req, res) => {
       prod_published,
       prod_image,
     });
+    logger.info(`post/admin/products - (User ${req.user.id} created product ${saveProduct.id})`)
     res.status(200).json({ Product: saveProduct });
   } catch (error) {
+    logger.error(`post/admin/products - (User ${req.user.id} creating a product) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -342,13 +257,13 @@ const updateProductAdmin = async (req, res) => {
     // }
 
     // Price conditions
-    if (/[^0-9]/.test(prod_stock)) {
-      return res.status(400).json({ Error: "Price must be an integer" });
-    }
+    // if (/[^0-9]/.test(prod_stock)) {
+    //   return res.status(400).json({ Error: "Price must be an integer" });
+    // }
     if (prod_price <= 0) {
       return res.status(400).json({ Error: "Price must be more than 0" });
     }
-    if (prod_price > 1000) {
+    if (prod_price > 100000) {
       return res.status(400).json({ Error: "Price must be less than 100000" });
     }
     if (!prod_price) {
@@ -412,13 +327,14 @@ const updateProductAdmin = async (req, res) => {
         prod_category: getProd_category,
         prod_user_id: getProd_user_id,
         prod_published: getProd_published,
-        // prod_stock: getProd_stock,
+        prod_stock: getProduct.dataValues.prod_stock,
         prod_image: prod_image,
       },
       {
         where: { id: product_id },
       }
     );
+    logger.info(`put/admin/products/:id - (User ${req.user.id} updated product ${req.params.id})`)
     res.status(200).json({
       Id: product_id,
       "Product name": getProd_name,
@@ -430,6 +346,7 @@ const updateProductAdmin = async (req, res) => {
       "Product image": prod_image,
     });
   } catch (error) {
+    logger.error(`put/admin/products/:id - (User ${req.user.id} update product ${req.params.id}) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -450,8 +367,10 @@ const deleteTransactionAdmin = async (req, res) => {
     if (!getTransaction) {
       return res.status(400).json("Transaction does not exists");
     }
+    logger.info(`delete/admin/transactions/:id - (User ${req.user.id} deleted transaction ${req.params.id})`)
     res.status(200).json(`Transaction ${id} deleted`);
   } catch (error) {
+    logger.error(`delete/admin/transactions/:id - (User ${req.user.id} deleting transaction ${req.params.id}) -Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -646,6 +565,7 @@ const updateUserByIdAdmin = async (req, res) => {
       },
       { where: { id } }
     );
+    logger.info(`put/admin/users/:id - (User ${req.user.id} updated user ${req.params.id})`)
     res.status(200).json({
       id,
       "User name": getUser_name,
@@ -658,6 +578,7 @@ const updateUserByIdAdmin = async (req, res) => {
       Address: address,
     });
   } catch (error) {
+    logger.error(`put/admin/users/:id - (User ${req.user.id} updating user ${req.params.id}) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -691,8 +612,10 @@ const updateTransactionAdmin = async (req, res) => {
         where: { id },
       }
     );
+    logger.info(`put/admin/transactions/:id - (User ${req.user.id} updated transaction ${req.params.id})`)
     res.status(200).json({ getTransaction });
   } catch (error) {
+    logger.error(`put/admin/transactions/:id - (User ${req.user.id} updating transaction ${req.params.id}) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -723,8 +646,10 @@ const deleteUserByIdAdmin = async (req, res) => {
         .json({ Error: "User owns products, cannot be removed" });
     }
     await user.destroy({ where: { id } });
+    logger.info(`delete/admin/users/:id - (User ${req.user.id} deleted user ${req.params.id})`)
     res.status(200).json({ Message: `User ${id} deleted` });
   } catch (error) {
+    logger.error(`delete/admin/users/:id - (User ${req.user.id} deleting user ${req.params.id}) - Error (500): ${error.message}`)
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -744,3 +669,99 @@ module.exports = {
   deleteTransactionAdmin,
   deleteUserByIdAdmin,
 };
+
+
+
+// // Create Transaction for any user
+// const saveTransactionAdminStockControl = async (req, res) => {
+//   try {
+//     const {
+//       trans_prod_id,
+//       trans_prod_quantity,
+//       trans_cancel,
+//       trans_buy_user_id,
+//     } = req.body;
+
+//     if (/[^0-9]/.test(trans_prod_quantity)) {
+//       return res.status(400).json({ Error: "Quantity must be an integer" });
+//     }
+//     if (trans_prod_quantity < 1) {
+//       return res.status(400).json({ Error: "Quantity must be more than 0" });
+//     }
+//     if (trans_prod_quantity >= 100) {
+//       return res.status(400).json({ Error: "Quantity must be less than 100" });
+//     }
+//     if (trans_prod_quantity > getProduct.dataValues.prod_stock) {
+//       return res.status(400).json({ Error: "Quantity exceeds stock" });
+//     }
+//     if (/[^0-9]/.test(trans_prod_id)) {
+//       return res.status(400).json({ Error: "Product id must be an integer" });
+//     }
+//     const getUser = await user.findOne({ where: { id: trans_buy_user_id } });
+//     if (!getUser) {
+//       return res.status(400).json({ Error: "User does not exists" });
+//     }
+//     const getProduct = await product.findOne({ where: { id: trans_prod_id } });
+//     if (!getProduct) {
+//       return res.status(400).json({ Error: "Product does not exists" });
+//     }
+//     if (/[^0-9]/.test(trans_buy_user_id)) {
+//       return res.status(400).json({ Error: "User id must be an integer" });
+//     }
+//     const prod_user_id = getProduct.prod_user_id;
+//     if (trans_buy_user_id == prod_user_id) {
+//       return res.status(400).json({ Error: "Seller cant buy his own product" });
+//     }
+//     if (!getProduct.dataValues.prod_published) {
+//       return res.status(400).json({ Error: "You cant buy a paused product" });
+//     }
+//     if (!typeof trans_cancel == "boolean") {
+//       return res
+//         .status(400)
+//         .json({ Error: "transaction cancel must be a boolean" });
+//     }
+//     if (trans_prod_quantity == getProduct.dataValues.prod_stock) {
+//       const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
+//       const getTransaction = await transaction.create({
+//         trans_cancel,
+//         trans_prod_id,
+//         trans_prod_quantity,
+//         trans_buy_user_id,
+//       });
+//       await product.update(
+//         {
+//           prod_published: false,
+//           prod_stock: NewStock,
+//         },
+//         { where: { id: trans_prod_id } }
+//       );
+//       return res.status(200).json({
+//         Message: "Out of stock, product paused",
+//         Transaction: getTransaction,
+//       });
+//     }
+//     const NewStock = getProduct.dataValues.prod_stock - trans_prod_quantity;
+//     console.log(NewStock);
+//     const getTransaction = await transaction.create({
+//       trans_cancel,
+//       trans_prod_id,
+//       trans_prod_quantity,
+//       trans_buy_user_id,
+//     });
+//     await product.update(
+//       {
+//         prod_stock: NewStock,
+//       },
+//       { where: { id: trans_prod_id } }
+//     );
+//     res.status(200).json({
+//       "Remaining product quantity": NewStock,
+//       Transaction: getTransaction,
+//     });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ Error: "An unexpected error occurred. please try again later" });
+//     console.log(error.message);
+//   }
+// };
