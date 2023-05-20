@@ -9,18 +9,18 @@ const getUserById = async (req, res) => {
     const id = req.params.id;
       // User id conditions
     if (/[^0-9]/.test(id)) {
-      logger.warn(`get/users/:id - ("User id must be an integer")`, { user: req.user.id, code: 400, method: "get", route: "/users/:id"})
+      logger.warn(`get/users/:id - ("User id must be an integer")`, { user: req.params.id, code: 400, method: "get", route: "/users/:id"})
       return res.status(400).json({ Error: "User id must be an integer" });
     }
     const getUser = await user.findOne({ where: { id } });
     if (!getUser) {
-      logger.warn(`get/users/:id - ("User does not exists")`, { user: req.user.id, code: 400, method: "get", route: "/users/:id"})
-      return res.status(400).json({ Error: "User does not exists" });
+      logger.warn(`get/users/:id - ("User does not exist")`, { user: req.params.id, code: 400, method: "get", route: "/users/:id"})
+      return res.status(400).json({ Error: "User does not exist" });
     }
-    logger.info(`get/users/:id - (getting user ${req.params.id})`, { user: req.user.id, code: 200, method: "get", route: "/users/:id"})
+    logger.info(`get/users/:id - (getting user ${req.params.id})`, { user: req.params.id, code: 200, method: "get", route: "/users/:id"})
     res.status(200).json({ "User name": getUser.user_name });
   } catch (error) {
-    logger.error(`get/users/:id - (getting user ${req.params.id}) - Error(500): ${error}`, { user: req.user.id, code: 500, method: "get", route: "/users/:id"})
+    logger.error(`get/users/:id - (getting user ${req.params.id}) - Error(500): ${error}`, { user: req.params.id, code: 500, method: "get", route: "/users/:id"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });

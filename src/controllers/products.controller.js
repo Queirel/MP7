@@ -19,10 +19,10 @@ const getProducts = async (req, res) => {
       where: { prod_published: true },
       //  offset: offset, limit: limit
     });
-    // logger.info(`get/products - (getted all products)`)
+    logger.info(`get/products - (got all products)`,{ code: 200, method: "get", route: "/products"})
     res.status(200).json({ Products: getProds });
   } catch (error) {
-    logger.error(`get/products - (getting all products) - Error(500): ${error.message}`)
+    logger.error(`get/products - (getting all products) - Error(500): ${error}`,{ code: 500, method: "get", route: "/products"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -37,12 +37,15 @@ const getProductById = async (req, res) => {
 
     // Product id conditions
     if (!id) {
+      logger.warn(`get/products/:id - (Id is missing)`,{ product: req.params.id, code: 400, method: "get", route: "/products/:id"})
       return res.status(400).json({ Error: "Id is missing" });
     }
     if (id == "") {
+      logger.warn(`get/products/:id - (id is empty)`,{ product: req.params.id, code: 400, method: "get", route: "/products/:id"})
       return res.status(400).json({ Error: "id is empty" });
     }
     if (/[^0-9]/.test(id)) {
+      logger.warn(`get/products/:id - (Product id must be an integer)`,{ product: req.params.id, code: 400, method: "get", route: "/products/:id"})
       return res.status(400).json({ Error: "Product id must be an integer" });
     }
 
@@ -60,10 +63,10 @@ const getProductById = async (req, res) => {
     if (!getProduct) {
       return res.status(400).json({ Error: "Product does not exist" });
     }
-    // logger.info(`get/products/:id - (getted product ${req.params.id})`)
+    logger.info(`get/products/:id - (getting product ${req.params.id})`,{ product: req.params.id, code: 200, method: "get", route: "/products/:id"})
     res.status(200).json({ Product: getProduct });
   } catch (error) {
-    logger.error(`get/products/:id - (getting product ${req.params.id}) - Error(500): ${error.message}`)
+    logger.error(`get/products/:id - (getting product ${req.params.id}) - Error(500): ${error}`,{ product: req.params.id, code: 500, method: "get", route: "/products/:id"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -88,6 +91,7 @@ const getProdByCategory = async (req, res) => {
       "toys",
     ];
     if (!categorys.includes(prod_category)) {
+      logger.warn(`get/products/category/:category - (The category does not exist)`,{ products_category: req.params.category, code: 400, method: "get", route: "/products/category/:category"})
       return res.status(400).json({ Error: "The category does not exist" });
     }
 
@@ -104,7 +108,7 @@ const getProdByCategory = async (req, res) => {
       ],
     });
     if (getProducts.length == 0) {
-      // logger.info(`get/products/category/:category - (getted products by category: ${req.params.category})`)
+      logger.info(`get/products/category/:category - (got products by category: ${req.params.category})`,{ products_category: req.params.category, code: 200, method: "get", route: "/products/category/:category"})
       return res
         .status(200)
         .json({ Message: "There is no products from that category" });
@@ -112,7 +116,7 @@ const getProdByCategory = async (req, res) => {
 
     res.status(200).json({ Product: getProducts });
   } catch (error) {
-    logger.error(`get/products/category/:category - (getting products by category: ${req.params.category}) - Error(500): ${error.message}`)
+    logger.error(`get/products/category/:category - (getting products by category: ${req.params.category}) - Error(500): ${error}`,{ products_category: req.params.category, code: 500, method: "get", route: "/products/category/:category"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -128,6 +132,7 @@ const getProductByUserId = async (req, res) => {
 
     // User id conditions
     if (/[^0-9]/.test(prod_user_id)) {
+      logger.warn(`get/products/user/:id - (User id must be an integer)`,{ products_user: req.params.id, code: 400, method: "get", route: "/products/user/:id"})
       return res.status(400).json({ Error: "User id must be an integer" });
     }
 
@@ -146,14 +151,15 @@ const getProductByUserId = async (req, res) => {
     });
 
     if (getProducts.length == 0) {
+      logger.info(`get/products/user/:id - (got products by user id: ${req.params.id})`,{ products_user: req.params.id, code: 200, method: "get", route: "/products/user/:id"})
       return res
         .status(200)
         .json({ Message: "There is no products from the user" });
     }
-    // logger.info(`get/products/user/:id - (getted products by user id: ${req.params.id})`)
+    // logger.info(`get/products/user/:id - (got products by user id: ${req.params.id})`)
     res.status(200).json({ Products: getProducts });
   } catch (error) {
-    logger.error(`get/products/user/:id - (getting products by user id: ${req.params.id}) - Error(500): ${error.message}`)
+    logger.error(`get/products/user/:id - (getting products by user id: ${req.params.id}) - Error(500): ${error}`,{ products_user: req.params.id, code: 500, method: "get", route: "/products/user/:id"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -170,24 +176,28 @@ const saveProduct = async (req, res) => {
     var prod_image;
 
     if (!prod_name) {
+      logger.warn(`post/products - (The product name field must be completed)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "The product name field must be completed" });
     }
 
     if (!prod_price) {
+      logger.warn(`post/products - (The product price field must be completed)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "The product price field must be completed" });
     }
 
     if (!prod_stock) {
+      logger.warn(`post/products - (The product stock field must be completed)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "The product stock field must be completed" });
     }
 
     if (!prod_category) {
+      logger.warn(`post/products - (The product category field must be completed)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "The product category field must be completed" });
@@ -211,38 +221,47 @@ const saveProduct = async (req, res) => {
 
     // Stock conditions
     if (/[^0-9]/.test(prod_stock)) {
+      logger.warn(`post/products - (Stock must be an integer)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Stock must be an integer" });
     }
     if (prod_stock <= 0) {
+      logger.warn(`post/products - (Stock must be more than 0)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Stock must be more than 0" });
     }
     if (prod_stock > 1000) {
+      logger.warn(`post/products - (Stock must be less than 1000)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Stock must be less than 1000" });
     }
 
     // Price conditions
     if (/[^0-9]/.test(prod_stock)) {
+      logger.warn(`post/products - (Price must be an integer)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Price must be an integer" });
     }
     if (prod_price <= 0) {
+      logger.warn(`post/products - (Price must be more than 0)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Price must be more than 0" });
     }
     if (prod_price > 100000) {
+      logger.warn(`post/products - (Price must be less than 100000)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res.status(400).json({ Error: "Price must be less than 100000" });
     }
 
     // Name conditions
     if (/[^a-zA-Z]/.test(prod_name)) {
+      logger.warn(`post/products - (Product name must be only letters)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "Product name must be only letters" });
     }
     if (prod_name.length > 15) {
+      logger.warn(`post/products - (Product name must be less than 15 characters)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "Product name must be less than 15 characters" });
     }
     if (prod_name.length < 3) {
+      logger.warn(`post/products - (Product name must be at least 3 letters)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
       return res
         .status(400)
         .json({ Error: "Product name must be at least 3 letters" });
@@ -259,6 +278,8 @@ const saveProduct = async (req, res) => {
       "toys",
     ];
     if (!categorys.includes(prod_category)) {
+      logger.warn(`post/products - (The category does not exist)`, { user: req.user.id, code: 400, method: "post", route: "/products"})
+
       return res.status(400).json({ Error: "The category does not exist" });
     }
 
@@ -271,7 +292,7 @@ const saveProduct = async (req, res) => {
       prod_category,
       prod_image,
     });
-    logger.info(`post/products - (created product ${saveProduct.id} by user ${req.user.id})`)
+    logger.info(`post/products - (created product ${saveProduct.id} by user ${req.user.id})`, { product: req.params.id, user: req.user.id, code: 200, method: "post", route: "/products"})
     res.status(200).json({
       Product: prod_name,
       User: user_id,
@@ -281,7 +302,7 @@ const saveProduct = async (req, res) => {
       Image: prod_image,
     });
   } catch (error) {
-    logger.error(`post/products - (creating a product by user ${req.user.id}) - Error(500): ${error.message}`)
+    logger.error(`post/products - (creating a product by user ${req.user.id}) - Error(500): ${error}`, { user: req.user.id, code: 500, method: "post", route: "/products"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -320,16 +341,19 @@ const updateProduct = async (req, res) => {
     } else {
       // Name conditions
       if (/[^a-zA-Z]/.test(prod_name)) {
+        logger.warn(`put/products/:id - (Product name must be only letters)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
         return res
           .status(400)
           .json({ Error: "Product name must be only letters" });
       }
       if (prod_name.length > 15) {
+        logger.warn(`put/products/:id - (Product name must be less than 15 characters)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
         return res
           .status(400)
           .json({ Error: "Product name must be less than 15 characters" });
       }
       if (prod_name.length < 3) {
+        logger.warn(`put/products/:id - (Product name must be at least 3 letters)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
         return res
           .status(400)
           .json({ Error: "Product name must be at least 3 letters" });
@@ -341,12 +365,18 @@ const updateProduct = async (req, res) => {
     } else {
       // Price conditions
       if (/[^0-9]/.test(prod_price)) {
+        logger.warn(`put/products/:id - (Price must be an integer)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
+
         return res.status(400).json({ Error: "Price must be an integer" });
       }
       if (prod_price <= 0) {
+        logger.warn(`put/products/:id - (Price must be more than 0)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
+
         return res.status(400).json({ Error: "Price must be more than 0" });
       }
       if (prod_price > 100000) {
+        logger.warn(`put/products/:id - (Price must be less than 100000)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
+
         return res
           .status(400)
           .json({ Error: "Price must be less than 100000" });
@@ -358,12 +388,17 @@ const updateProduct = async (req, res) => {
     } else {
       // Stock conditions
       if (/[^0-9]/.test(prod_stock)) {
+        logger.warn(`put/products/:id - (Stock must be an integer)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
+
         return res.status(400).json({ Error: "Stock must be an integer" });
       }
       if (prod_stock <= 0) {
+        logger.warn(`put/products/:id - (Stock must be more than 0)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
+
         return res.status(400).json({ Error: "Stock must be more than 0" });
       }
       if (prod_stock > 1000) {
+        logger.warn(`put/products/:id - (Stock must be less than 1000)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
         return res.status(400).json({ Error: "Stock must be less than 1000" });
       }
       getProd_stock = prod_stock;
@@ -382,6 +417,7 @@ const updateProduct = async (req, res) => {
         "toys",
       ];
       if (!categorys.includes(prod_category)) {
+        logger.warn(`put/products/:id - (The category does not exist)`, { product: req.params.id, user: req.user.id, code: 400, method: "put", route: "/products/:id"})
         return res.status(400).json({ Error: "The category does not exist" });
       }
 
@@ -407,7 +443,7 @@ const updateProduct = async (req, res) => {
         where: { id: product_id },
       }
     );
-    logger.info(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id})`)
+    logger.info(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id})`, { product: req.params.id, user: req.user.id, code: 200, method: "put", route: "/products/:id"})
     // response
     res.status(200).json({
       Id: product_id,
@@ -419,7 +455,7 @@ const updateProduct = async (req, res) => {
       "Product image": prod_image,
     });
   } catch (error) {
-    logger.error(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id}) - Error(500): ${error.message}`)
+    logger.error(`put/products/:id - (updating product ${req.params.id} by user ${getProduct.prod_user_id}) - Error(500): ${error}`, { product: req.params.id, user: req.user.id, code: 500, method: "put", route: "/products/:id"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });
@@ -441,11 +477,11 @@ const deleteProduct = async (req, res) => {
     // if (!getProduct) {
     //     return res.status(400).json({ "Error": "Product does not exists" })
     // }
-    logger.info(`delete/products/:id - (deleting product ${req.params.id})`)
+    logger.info(`delete/products/:id - (deleting product ${req.params.id})`, { product: req.params.id, user: req.user.id, code: 200, method: "delete", route: "/products/:id"})
     await product.destroy({ where: { id } });
     res.status(200).json({ Message: `Product ${id} deleted` });
   } catch (error) {
-    logger.error(`delete/products/:id - (deleting product ${req.params.id}) - Error(500): ${error.message}`)
+    logger.error(`delete/products/:id - (deleting product ${req.params.id}) - Error(500): ${error}`, { product: req.params.id, user: req.user.id, code: 500, method: "delete", route: "/products/:id"})
     res
       .status(500)
       .json({ Error: "An unexpected error occurred. please try again later" });

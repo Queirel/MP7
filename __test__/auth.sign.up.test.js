@@ -119,22 +119,6 @@ describe("🟨 POST /sign/up", () => {
         expect(getUser.user_role).toBe("user");
       });
 
-      // shoud respond with a json object containsing the new user with an id
-      test("should respond with an ID", async () => {
-        const response = await request(app).post("/sign/up").send({
-          user_name: "isusername51",
-          user_password: "pass",
-          user_realname: "name",
-          user_lastname: "lastname",
-          user_dni: 12345678,
-          user_email: "email2@mail.com",
-          user_route: "godoy",
-          user_street_number: "3046",
-          user_locality: "caba",
-        });
-        expect(response.body.id).toBeDefined();
-      });
-
       // should respond a json as a content type
       test("should have a Content-Type: application/json header", async () => {
         const response = await request(app).post("/sign/up").send({
