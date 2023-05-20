@@ -166,26 +166,8 @@ Infrastructure
     <!-- - FAlatara algun US ? -->
 
 `EPIC tener registro de direccion de usuarios google api para validar direcciones en geocoding` ✅
-    - Como user, quiero poder proporcionar mi direccion para los envios
-        - Items a agregar entre los datos del usuario: calle, numeracion y localidad
-        - adaptar post
-        - Añadir al swagger
-        - añadir casos de test 
-    - Como user quiero poder modificar mi direccion en cualquier momento
-        - adaptar los put
-        - Añadir al swagger
-        - añadir casos de test 
-    - Como user quiero poder ver mi direccion en el mapa para confirmar la localizacion
-        - adaptar los get
-        - adaptar swagger
-        - añadir casos de test 
-    - Como admin, quiero poder modificar la direccion de los usuarios
-        - adaptar put 
-        - adaptar swagger
-        - añadir casos de test 
     - Como sistema, quiero poder chequear la existencia de la direccion que se provee antes de proceder
-        - Agregar helper de Geocode
-        - Agregar controller
+        - Agregar Geocode
         - adaptar swagger
         - añadir casos de test  
     - Como sistema, si la direccion es valida, quiero poder mostrar esa direccion en el mapa
@@ -196,22 +178,51 @@ Infrastructure
         - agregar migration para la direccion del usuario
         - recibir el place id con Geocode y guardar en base de datos
         - adaptar swagger
-        - añadir casos de test  
+        - añadir casos de test 
+    - Como user, quiero poder proporcionar mi direccion para recibir los envios
+        - Items a agregar entre los datos del usuario: calle, numeracion y localidad
+        - adaptar post
+        - Añadir al swagger
+        - añadir casos de test 
+    - Como user, quiero tener la posibilidad de no agregar mi direccion al momento de la creacion del usuario
+        - adaptar post
+        - adaptar model
+        - Añadir al swagger
+        - añadir casos de test 
+    - Como user quiero poder modificar mi direccion en cualquier momento
+        - adaptar los put
+        - Añadir al swagger
+        - añadir casos de test 
+    - Como user quiero poder ver mi direccion en el mapa para confirmar la localizacion
+        - adaptar los post
+        - adaptar swagger
+        - añadir casos de test 
+    - Como admin, quiero poder modificar la direccion de los usuarios
+        - adaptar put 
+        - adaptar swagger
+        - añadir casos de test 
 
 `EPIC Payment` ✅
+    - Como system quiero poder utilizar stripe
+        - agregar stripe a las transacciones
+    - Como system quiero poder guardar el id de stripe al momento de la creacion del usuario
+        - agregar migration para añadir columna en la tabla del usuario en la base de datos
+        - adaptar los post
+        - adaptar swagger
+        - añadir casos de test
     - Como user, quiero poder comprar un producto
-        - adaptar stripe a las transacciones
+        - adaptar post
         - adaptar swagger
         - añadir casos de test  
     - Como user, quiero poder ver si el pago fue realizado con exito o rechazado
         - adaptar los get
         - adaptar swagger
         - añadir casos de test  
-    - Como sistema se debe poder acceder a la modificacion el stock si la transaccion fue exitosa
+    - Como system se debe poder acceder a la modificacion el stock si la transaccion fue exitosa
         - adaptar los get
         - adaptar swagger
         - añadir casos de test  
-    - Como sistema quiero poder guardar al cliente para una proxima transaccion
+    - Como system quiero poder guardar al cliente para una proxima transaccion
         - agregar migration de cliente stripe
         - agregar id del cliente en base de datos
         <!-- - Para luego ? 
@@ -221,3 +232,42 @@ Infrastructure
     - Como user, quiero poder elegir pagar en una o varias cuotas -->
 
 `EPIC product image` ✅
+    - Como system quiero poder tener acceso al servicio S3 de AWS para guardar las imagenes
+        - configurar conexiones al servicio
+    - Como system quiero poder guardar la URL de la imagen en la base de datos
+        - agregar migration para añadir columna en la tabla de productos de la base de datos
+        - adaptar los post
+        - adaptar swagger
+        - añadir casos de test
+    - Como user, quiero poder guardar la imagen de un producto
+        - adaptar post
+        - adaptar swagger
+        - añadir casos de test  
+    - Como user, quiero tener la posibilidad de no agregar la imagen del producto al momento de la creacion del mismo
+        - adaptar los post
+        - adaptar model
+        - adaptar swagger
+        - añadir casos de test  
+    - Como user, quiero poder agregar o modificar la imagen del producto cuando lo requiera
+        - adaptar los put
+        - adaptar swagger
+        - añadir casos de test  
+    - Como Admin quiero poder guardar la imagen de productos a otros usuarios
+        - adaptar los post
+        - adaptar swagger
+        - añadir casos de test
+    - Como Admin quiero poder modificar la imagen de productos a otros usuarios
+        - adaptar los put
+        - adaptar swagger
+        - añadir casos de test
+
+`EPIC LOGS` ✅
+    - Como system quiero que todos los registros generados se almacenen con Winston
+        - Agregar y configurar conexion a winston
+    - Como system quiero poder guardar registro de las consultas sobre las rutas
+        - adaptar los logs
+    - Como system quiero poder guardar registro de los errores generados
+        - adaptar los logs
+    - Como system quiero poder guardar registro de las advertencias
+        - adaptar los logs
+
